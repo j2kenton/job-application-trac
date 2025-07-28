@@ -6,19 +6,24 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import { useKV } from '@github/spark/hooks';
-import { Copy, Check, Mail, Settings, ArrowRight, Warning } from '@phosphor-icons/react';
+import { Copy, Check, Mail, Settings, ArrowRight, Warning, Plus, FileText } from '@phosphor-icons/react';
 import { toast } from 'sonner';
+import { JobApplication } from '@/lib/types';
 
 interface EmailForwardingSetupProps {
   children?: React.ReactNode;
+  onApplicationAdd?: (application: Omit<JobApplication, 'id'>) => void;
 }
 
-export function EmailForwardingSetup({ children }: EmailForwardingSetupProps) {
+export function EmailForwardingSetup({ children, onApplicationAdd }: EmailForwardingSetupProps) {
   const [open, setOpen] = useState(false);
   const [forwardingEmail, setForwardingEmail] = useKV<string>('forwarding-email', '');
   const [tempEmail, setTempEmail] = useState('');
   const [copied, setCopied] = useState<string | null>(null);
+  const [emailContent, setEmailContent] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Generate a unique forwarding address based on current timestamp or user ID
   const generateForwardingAddress = () => {
@@ -45,6 +50,69 @@ export function EmailForwardingSetup({ children }: EmailForwardingSetupProps) {
     }
   };
 
+  const processEmailContent = async () => {
+    if (!emailContent.trim()) {
+      toast.error('Please paste an email to process');
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      const prompt = spark.llmPrompt`
+        Extract job application information from this email content. Look for:
+        - Company name
+        - Position/job title  
+        - Application date (if mentioned, otherwise use current date)
+        - Any status information
+        - Any salary information
+        - Any notes or important details
+
+        Email content:
+        ${emailContent}
+
+        Return a JSON object with these fields:
+        {
+          "company": "string",
+          "position": "string", 
+          "appliedDate": "YYYY-MM-DD",
+          "status": "applied" | "interview" | "offer" | "rejected",
+          "salary": "string or null",
+          "notes": "string with any additional relevant information"
+        }
+
+        If you can't find specific information, use reasonable defaults:
+        - status should be "applied" unless clearly stated otherwise
+        - appliedDate should be today's date if not specified
+        - salary can be null if not mentioned
+      `;
+
+      const result = await spark.llm(prompt, 'gpt-4o', true);
+      const parsedData = JSON.parse(result);
+
+      if (onApplicationAdd && parsedData.company && parsedData.position) {
+        onApplicationAdd({
+          company: parsedData.company,
+          position: parsedData.position,
+          appliedDate: parsedData.appliedDate || new Date().toISOString().split('T')[0],
+          status: parsedData.status || 'applied',
+          salary: parsedData.salary || '',
+          notes: parsedData.notes || '',
+        });
+
+        toast.success(`Added application for ${parsedData.position} at ${parsedData.company}!`);
+        setEmailContent('');
+        setOpen(false);
+      } else {
+        toast.error('Could not extract enough information from the email. Please try manual entry.');
+      }
+    } catch (error) {
+      console.error('Error processing email:', error);
+      toast.error('Failed to process email. Please try again or use manual entry.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const currentForwardingAddress = forwardingEmail || generateForwardingAddress();
 
   return (
@@ -66,25 +134,87 @@ export function EmailForwardingSetup({ children }: EmailForwardingSetupProps) {
         </DialogHeader>
 
         <div className="space-y-6">
+          {/* Email Parser Section */}
+          <Card className="border-blue-200 bg-blue-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-blue-900">
+                <FileText size={20} />
+                Email Parser - Paste & Process
+                <Badge variant="secondary">Functional</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-blue-800">
+                Copy and paste job application emails here to automatically extract and add them to your tracker.
+              </p>
+              
+              <div className="space-y-3">
+                <Label htmlFor="email-content">Email Content</Label>
+                <Textarea
+                  id="email-content"
+                  placeholder="Paste your job application email here..."
+                  value={emailContent}
+                  onChange={(e) => setEmailContent(e.target.value)}
+                  className="min-h-32 bg-white"
+                />
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={processEmailContent}
+                    disabled={!emailContent.trim() || isProcessing}
+                    className="gap-2"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <Plus size={16} />
+                        Parse & Add Application
+                      </>
+                    )}
+                  </Button>
+                  {emailContent && (
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setEmailContent('')}
+                      size="sm"
+                    >
+                      Clear
+                    </Button>
+                  )}
+                </div>
+              </div>
+              
+              <div className="text-xs text-blue-700 space-y-1">
+                <p><strong>Tip:</strong> This works with emails from job boards, company confirmations, recruiter messages, etc.</p>
+                <p><strong>AI will extract:</strong> Company name, position, application date, status, and any other relevant details.</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Separator />
+
           {/* Current Status */}
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-amber-500" />
-                Setup Status
+                Email Forwarding Status
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-2">
                 <Badge variant="secondary">
-                  Demo Mode
+                  Manual Mode
                 </Badge>
                 <span className="text-sm text-muted-foreground">
-                  Email forwarding is conceptual - manual entry recommended
+                  Use the email parser above or manual entry for now
                 </span>
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                The forwarding address shown below is for demonstration purposes only.
+                The forwarding address shown below is conceptual - email parsing works via copy/paste.
               </p>
             </CardContent>
           </Card>
@@ -372,7 +502,7 @@ export function EmailForwardingSetup({ children }: EmailForwardingSetupProps) {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-green-900">
                   <Check size={18} />
-                  Realistic Alternatives
+                  Working Solutions
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -383,9 +513,9 @@ export function EmailForwardingSetup({ children }: EmailForwardingSetupProps) {
                         1
                       </div>
                       <div>
-                        <p className="font-medium">Manual Entry (Recommended)</p>
+                        <p className="font-medium">Email Parser (Available Now)</p>
                         <p className="text-sm text-green-700">
-                          Use the app's manual "Add Application" feature. It's quick, reliable, and you control the data quality.
+                          Copy and paste job emails into the parser above. AI extracts all the details automatically.
                         </p>
                       </div>
                     </div>
@@ -395,9 +525,9 @@ export function EmailForwardingSetup({ children }: EmailForwardingSetupProps) {
                         2
                       </div>
                       <div>
-                        <p className="font-medium">Zapier Integration</p>
+                        <p className="font-medium">Manual Entry</p>
                         <p className="text-sm text-green-700">
-                          Set up a Zapier automation that watches your Gmail for job emails and adds them to a webhook endpoint.
+                          Use the app's manual "Add Application" feature for complete control over data entry.
                         </p>
                       </div>
                     </div>
@@ -407,9 +537,9 @@ export function EmailForwardingSetup({ children }: EmailForwardingSetupProps) {
                         3
                       </div>
                       <div>
-                        <p className="font-medium">Gmail API Integration</p>
+                        <p className="font-medium">Zapier Integration</p>
                         <p className="text-sm text-green-700">
-                          For developers: Use Gmail's API with OAuth to read emails directly (requires significant setup).
+                          Set up a Zapier automation that watches your Gmail for job emails and adds them to a webhook endpoint.
                         </p>
                       </div>
                     </div>
@@ -421,7 +551,7 @@ export function EmailForwardingSetup({ children }: EmailForwardingSetupProps) {
                       <div>
                         <p className="font-medium">Forward to Your Own Email</p>
                         <p className="text-sm text-green-700">
-                          Set up forwarding to your own secondary email address, then copy/paste relevant details into the app.
+                          Set up forwarding to your own secondary email address, then copy/paste into the parser above.
                         </p>
                       </div>
                     </div>

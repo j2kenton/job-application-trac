@@ -2,9 +2,9 @@
 
 ## Core Purpose & Success
 
-- **Mission Statement**: Streamline job application management by automatically parsing email confirmations and providing centralized tracking with status filtering.
-- **Success Indicators**: Users can effortlessly track all applications without manual data entry, easily filter by status, and never lose track of application progress.
-- **Experience Qualities**: Automated, organized, professional
+- **Mission Statement**: Streamline job application management by automatically parsing email content with AI and providing centralized tracking with status filtering.
+- **Success Indicators**: Users can effortlessly track all applications with AI-powered email parsing, easily filter by status, and never lose track of application progress.
+- **Experience Qualities**: Intelligent, automated, organized
 
 ## Project Classification & Approach
 
@@ -15,22 +15,22 @@
 
 Job seekers struggle to keep track of multiple applications across different companies and platforms. Email confirmations pile up, application statuses change, and important details get lost. This app solves that by:
 
-1. **Automated Data Entry**: Parse job application emails to extract company, position, and details
+1. **AI Email Parsing**: Parse job application emails by copying and pasting content to extract company, position, and details
 2. **Centralized Tracking**: Single dashboard view of all applications
 3. **Status Management**: Track progress from application to offer/rejection
-4. **Email Integration**: Forward emails to automatically populate the tracker
+4. **Copy-Paste Integration**: Process emails by pasting content into the built-in AI parser
 
 ## Essential Features
 
-### Email Forwarding Setup
-- **What it does**: Provides unique forwarding address and detailed setup instructions for Gmail/Outlook
-- **Why it matters**: Enables automated application tracking without manual data entry
-- **Success criteria**: Users can successfully configure email forwarding and see applications auto-populate
+### AI Email Parser
+- **What it does**: AI-powered extraction of company name, position, application date, and contact details from pasted job emails
+- **Why it matters**: Eliminates manual data entry with intelligent parsing that works with any email format
+- **Success criteria**: 90%+ accuracy in extracting key information from job application emails with smart duplicate detection
 
-### Email Parsing
-- **What it does**: Extracts company name, position, application date, and contact details from job emails
-- **Why it matters**: Eliminates manual data entry and reduces errors
-- **Success criteria**: 90%+ accuracy in extracting key information from common job application emails
+### Email Forwarding Setup (Conceptual)
+- **What it does**: Provides instructions for email forwarding while highlighting the practical AI parser solution
+- **Why it matters**: Educates users about email forwarding challenges while providing a working alternative
+- **Success criteria**: Users understand email forwarding limitations and successfully use the AI parser instead
 
 ### Application Management
 - **What it does**: Full CRUD operations for job applications with status tracking
@@ -99,8 +99,8 @@ Job seekers struggle to keep track of multiple applications across different com
 - **Migration Strategy**: Graceful handling of data structure changes
 
 ### User Experience Flow
-1. **Setup**: Configure email forwarding with clear instructions
-2. **Population**: Applications auto-populate from forwarded emails
+1. **Setup**: Optional email forwarding education with emphasis on AI parser
+2. **Population**: Applications auto-populate from pasted emails using AI parsing
 3. **Management**: Manual editing and status updates as needed
 4. **Tracking**: Filter and view applications by status
 
@@ -113,4 +113,4 @@ Job seekers struggle to keep track of multiple applications across different com
 
 ## Reflection
 
-This approach uniquely combines automation with manual control, giving users the best of both worlds. The email forwarding setup removes friction from data entry while maintaining full editing capabilities for edge cases. The focus on professional design and clear status tracking makes this suitable for serious job seekers who need organized, reliable application management.
+This approach uniquely combines AI automation with manual control, giving users the best of both worlds. The AI email parser removes friction from data entry while maintaining full editing capabilities for edge cases. The focus on professional design and clear status tracking makes this suitable for serious job seekers who need organized, reliable application management with intelligent automation.

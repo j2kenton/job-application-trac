@@ -5,9 +5,32 @@ import { Briefcase, TrendingUp, Settings } from '@phosphor-icons/react';
 import { useKV } from '@github/spark/hooks';
 import { Toaster } from '@/components/ui/sonner';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 function App() {
   const [applications, setApplications] = useKV<JobApplication[]>('job-applications', []);
+
+  const handleAddApplication = (newApp: Omit<JobApplication, 'id'>) => {
+    const application: JobApplication = {
+      ...newApp,
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+    };
+
+    setApplications((currentApps) => {
+      // Check for duplicates based on company and position
+      const isDuplicate = currentApps.some(
+        app => app.company.toLowerCase() === application.company.toLowerCase() && 
+               app.position.toLowerCase() === application.position.toLowerCase()
+      );
+
+      if (isDuplicate) {
+        toast.error(`Application for ${application.position} at ${application.company} already exists!`);
+        return currentApps;
+      }
+
+      return [...currentApps, application];
+    });
+  };
 
   const getStatusCounts = () => {
     const counts = {
@@ -43,14 +66,14 @@ function App() {
               <div>
                 <h1 className="text-3xl font-bold">Job Application Tracker</h1>
                 <p className="text-muted-foreground">
-                  Manage your job applications with email parsing and status tracking
+                  Manage your job applications with AI email parsing and status tracking
                 </p>
               </div>
             </div>
-            <EmailForwardingSetup>
+            <EmailForwardingSetup onApplicationAdd={handleAddApplication}>
               <Button variant="outline" size="sm" className="gap-2">
                 <Settings size={16} />
-                Email Setup
+                Email Parser
               </Button>
             </EmailForwardingSetup>
           </div>
