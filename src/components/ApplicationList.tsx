@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ApplicationCard } from './ApplicationCard';
 import { ApplicationForm } from './ApplicationForm';
 import { EmailParserDialog } from './EmailParserDialog';
+import { EmailForwardingSetup } from './EmailForwardingSetup';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { JobApplication, ApplicationStatus, ParsedEmailData } from '@/lib/types';
@@ -119,6 +120,7 @@ export function ApplicationList({ applications, onApplicationsChange }: Applicat
         </div>
 
         <div className="flex gap-2">
+          <EmailForwardingSetup />
           <EmailParserDialog onParsed={handleEmailParsed} />
           <Button onClick={() => setShowForm(true)} className="gap-2">
             <Plus size={16} />
@@ -149,6 +151,11 @@ export function ApplicationList({ applications, onApplicationsChange }: Applicat
             </div>
             {statusFilter === 'all' && (
               <div className="flex gap-2">
+                <EmailForwardingSetup>
+                  <Button variant="outline" className="gap-2">
+                    Email Setup
+                  </Button>
+                </EmailForwardingSetup>
                 <EmailParserDialog onParsed={handleEmailParsed}>
                   <Button variant="outline" className="gap-2">
                     Parse Email

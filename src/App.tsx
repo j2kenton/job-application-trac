@@ -1,8 +1,10 @@
 import { ApplicationList } from './components/ApplicationList';
+import { EmailForwardingSetup } from './components/EmailForwardingSetup';
 import { JobApplication } from './lib/types';
-import { Briefcase, TrendingUp } from '@phosphor-icons/react';
+import { Briefcase, TrendingUp, Settings } from '@phosphor-icons/react';
 import { useKV } from '@github/spark/hooks';
 import { Toaster } from '@/components/ui/sonner';
+import { Button } from '@/components/ui/button';
 
 function App() {
   const [applications, setApplications] = useKV<JobApplication[]>('job-applications', []);
@@ -33,16 +35,24 @@ function App() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <header className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-primary text-primary-foreground rounded-lg">
-              <Briefcase size={24} />
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary text-primary-foreground rounded-lg">
+                <Briefcase size={24} />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold">Job Application Tracker</h1>
+                <p className="text-muted-foreground">
+                  Manage your job applications with email parsing and status tracking
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold">Job Application Tracker</h1>
-              <p className="text-muted-foreground">
-                Manage your job applications with email parsing and status tracking
-              </p>
-            </div>
+            <EmailForwardingSetup>
+              <Button variant="outline" size="sm" className="gap-2">
+                <Settings size={16} />
+                Email Setup
+              </Button>
+            </EmailForwardingSetup>
           </div>
 
           {applications.length > 0 && (
