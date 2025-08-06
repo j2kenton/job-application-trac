@@ -36,7 +36,8 @@ class LinkedInService {
   constructor() {
     this.clientId = import.meta.env.VITE_LINKEDIN_CLIENT_ID || null;
     // Use current origin for redirect - LinkedIn will redirect back to the main app
-    this.redirectUri = import.meta.env.VITE_LINKEDIN_REDIRECT_URI || `${window.location.origin}`;
+    // Always use the current window's origin to handle dynamic ports in development
+    this.redirectUri = window.location.origin;
   }
 
   /**

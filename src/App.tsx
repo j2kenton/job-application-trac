@@ -106,6 +106,12 @@ function App() {
             // If we're in a popup window, handle the callback and notify parent
             if (window.opener && window.opener !== window) {
               try {
+                // Validate state parameter before processing
+                const storedState = localStorage.getItem('linkedin_oauth_state');
+                if (state !== storedState) {
+                  throw new Error('OAuth state validation failed - possible CSRF attack or stale request');
+                }
+                
                 await linkedInService.handleCallback(code, state);
                 // Notify parent window of success
                 window.opener.postMessage({
@@ -114,6 +120,7 @@ function App() {
                 // Add a small delay before closing to ensure message is sent
                 setTimeout(() => window.close(), 100);
               } catch (error) {
+                console.error('LinkedIn OAuth callback error:', error);
                 // Notify parent window of error
                 window.opener.postMessage({
                   type: 'LINKEDIN_AUTH_ERROR',
