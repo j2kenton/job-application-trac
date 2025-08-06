@@ -314,26 +314,57 @@ class LinkedInService {
 
   /**
    * Exchange authorization code for access token
-   * Note: This requires a backend service due to CORS restrictions
+   * Uses backend service to handle the token exchange securely
    */
   private async exchangeCodeForToken(code: string): Promise<any> {
     try {
-      // In a production app, this should call your backend API
-      // For development, we'll show an informative error
+      const backendUrl = import.meta.env.VITE_LINKEDIN_BACKEND_URL || 'http://localhost:3001';
       
-      console.error('LinkedIn token exchange requires a backend service due to CORS restrictions');
-      console.log('Authorization code received:', code);
-      console.log('To complete the integration, implement a backend endpoint that:');
-      console.log('1. Receives the authorization code');
-      console.log('2. Exchanges it for an access token using LinkedIn API');
-      console.log('3. Returns the token to the frontend');
+      console.log('Exchanging authorization code for access token via backend...');
+      console.log('Authorization code received:', code.substring(0, 20) + '...');
+      console.log('Backend URL:', backendUrl);
       
-      // For demo purposes, we'll simulate a token (this won't work for real API calls)
-      throw new Error('LinkedIn integration requires a backend service for token exchange. See console for implementation details.');
+      const response = await fetch(`${backendUrl}/api/linkedin/token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code: code,
+          redirect_uri: this.redirectUri
+        })
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        console.error('Backend token exchange failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: responseData
+        });
+        
+        const errorMessage = responseData.error || 'Token exchange failed';
+        throw new Error(`LinkedIn authentication failed: ${errorMessage}`);
+      }
+
+      console.log('LinkedIn token exchange successful:', {
+        access_token: responseData.access_token ? 'received' : 'missing',
+        expires_in: responseData.expires_in,
+        scope: responseData.scope,
+        token_type: responseData.token_type
+      });
+
+      return responseData;
       
     } catch (error) {
       console.error('Token exchange error:', error);
-      throw new Error('LinkedIn authentication requires a backend service to complete. This is due to CORS security restrictions.');
+      
+      if (error.message.includes('Failed to fetch')) {
+        throw new Error('Could not connect to LinkedIn backend service. Make sure the backend is running on http://localhost:3001');
+      }
+      
+      throw error;
     }
   }
 
