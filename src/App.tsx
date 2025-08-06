@@ -110,7 +110,7 @@ function App() {
                 // Notify parent window of success
                 window.opener.postMessage({
                   type: 'LINKEDIN_AUTH_SUCCESS'
-                }, window.location.origin);
+                }, '*'); // Use wildcard for cross-port communication
                 // Add a small delay before closing to ensure message is sent
                 setTimeout(() => window.close(), 100);
               } catch (error) {
@@ -118,7 +118,7 @@ function App() {
                 window.opener.postMessage({
                   type: 'LINKEDIN_AUTH_ERROR',
                   error: error instanceof Error ? error.message : 'Authentication failed'
-                }, window.location.origin);
+                }, '*');
                 setTimeout(() => window.close(), 100);
               }
             }
@@ -128,7 +128,7 @@ function App() {
               window.opener.postMessage({
                 type: 'LINKEDIN_AUTH_ERROR',
                 error: 'Failed to load LinkedIn service'
-              }, window.location.origin);
+              }, '*');
               setTimeout(() => window.close(), 100);
             }
           }
@@ -137,7 +137,7 @@ function App() {
           window.opener.postMessage({
             type: 'LINKEDIN_AUTH_ERROR',
             error: error
-          }, window.location.origin);
+          }, '*');
           setTimeout(() => window.close(), 100);
         }
       } catch (generalError) {
@@ -148,7 +148,7 @@ function App() {
             window.opener.postMessage({
               type: 'LINKEDIN_AUTH_ERROR',
               error: 'Callback handler encountered an error'
-            }, window.location.origin);
+            }, '*');
             setTimeout(() => window.close(), 100);
           } catch (messageError) {
             console.error('Failed to send error message to parent:', messageError);
