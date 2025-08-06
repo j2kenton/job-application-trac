@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { parseEmailContent } from '@/lib/emailParser';
 import { ParsedEmailData } from '@/lib/types';
-import { Mail, Wand2 } from '@phosphor-icons/react';
+import { Envelope, Gear } from '@phosphor-icons/react';
 
 interface EmailParserDialogProps {
   onParsed: (data: ParsedEmailData) => void;
@@ -51,7 +51,7 @@ export function EmailParserDialog({ onParsed, children }: EmailParserDialogProps
       <DialogTrigger asChild>
         {children || (
           <Button className="gap-2">
-            <Mail size={16} />
+            <Envelope size={16} />
             Parse Email
           </Button>
         )}
@@ -59,7 +59,7 @@ export function EmailParserDialog({ onParsed, children }: EmailParserDialogProps
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Mail size={20} />
+            <Envelope size={20} />
             Parse Job Application Email
           </DialogTitle>
         </DialogHeader>
@@ -83,7 +83,7 @@ export function EmailParserDialog({ onParsed, children }: EmailParserDialogProps
               disabled={!emailContent.trim() || isProcessing}
               className="w-full gap-2"
             >
-              <Wand2 size={16} />
+              <Gear size={16} />
               {isProcessing ? 'Processing...' : 'Parse Email'}
             </Button>
           )}

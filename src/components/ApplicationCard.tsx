@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { JobApplication } from '@/lib/types';
 import { statusLabels, statusColors } from '@/lib/applications';
-import { Pencil, Trash2, ExternalLink, Calendar, MapPin, DollarSign, Mail } from '@phosphor-icons/react';
+import { Pencil, Trash, ArrowSquareOut, Calendar, MapPin, CurrencyDollar, Envelope } from '@phosphor-icons/react';
 import { format } from 'date-fns';
 
 interface ApplicationCardProps {
@@ -54,7 +54,7 @@ export function ApplicationCard({ application, onEdit, onDelete }: ApplicationCa
                 onClick={handleDelete}
                 className="h-8 w-8 p-0 text-destructive hover:text-destructive"
               >
-                <Trash2 size={14} />
+                <Trash size={14} />
               </Button>
             </div>
           </div>
@@ -76,7 +76,7 @@ export function ApplicationCard({ application, onEdit, onDelete }: ApplicationCa
 
         {application.salary && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <DollarSign size={14} />
+            <CurrencyDollar size={14} />
             <span>{application.salary}</span>
           </div>
         )}
@@ -96,7 +96,7 @@ export function ApplicationCard({ application, onEdit, onDelete }: ApplicationCa
               className="gap-2"
             >
               <a href={application.jobUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink size={14} />
+                <ArrowSquareOut size={14} />
                 View Job
               </a>
             </Button>
@@ -110,7 +110,7 @@ export function ApplicationCard({ application, onEdit, onDelete }: ApplicationCa
               className="gap-2"
             >
               <a href={`mailto:${application.contactEmail}`}>
-                <Mail size={14} />
+                <Envelope size={14} />
                 Contact
               </a>
             </Button>

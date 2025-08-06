@@ -1,0 +1,21 @@
+{
+  "syncSchedule": {
+    "enabled": true,
+    "time": "09:00",
+    "timezone": "Asia/Jerusalem",
+    "frequency": "daily"
+  },
+  "processing": {
+    "maxEmailsPerSync": 50,
+    "lookbackDays": 14,
+    "processThreadsOnly": "latest"
+  },
+  "gmail": {
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.labels",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "batchSize": 10
+  }
+}

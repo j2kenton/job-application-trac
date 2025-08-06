@@ -1,14 +1,29 @@
 import { ApplicationList } from './components/ApplicationList';
 import { EmailForwardingSetup } from './components/EmailForwardingSetup';
+import { GmailAuth } from './components/GmailAuth';
+import { GmailSyncStatus } from './components/GmailSyncStatus';
+import { EmailReviewQueue } from './components/EmailReviewQueue';
 import { JobApplication } from './lib/types';
-import { Briefcase, TrendingUp, Settings } from '@phosphor-icons/react';
-import { useKV } from '@github/spark/hooks';
+import { Briefcase, TrendUp, Gear, Envelope } from '@phosphor-icons/react';
+import { useState, useEffect } from 'react';
 import { Toaster } from '@/components/ui/sonner';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 
 function App() {
-  const [applications, setApplications] = useKV<JobApplication[]>('job-applications', []);
+  const [applications, setApplications] = useState<JobApplication[]>(() => {
+    try {
+      const saved = localStorage.getItem('job-applications');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('job-applications', JSON.stringify(applications));
+  }, [applications]);
 
   const handleAddApplication = (newApp: Omit<JobApplication, 'id'>) => {
     const application: JobApplication = {
@@ -72,7 +87,7 @@ function App() {
             </div>
             <EmailForwardingSetup onApplicationAdd={handleAddApplication}>
               <Button variant="outline" size="sm" className="gap-2">
-                <Settings size={16} />
+                <Gear size={16} />
                 Email Parser
               </Button>
             </EmailForwardingSetup>
@@ -95,7 +110,7 @@ function App() {
               <div className="bg-card p-4 rounded-lg border">
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-primary text-primary-foreground rounded">
-                    <TrendingUp size={16} />
+                    <TrendUp size={16} />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Active</p>
@@ -132,10 +147,50 @@ function App() {
         </header>
 
         <main>
-          <ApplicationList 
-            applications={applications} 
-            onApplicationsChange={setApplications}
-          />
+          <Tabs defaultValue="applications" className="space-y-4">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="applications" className="gap-2">
+                <Briefcase size={16} />
+                Applications
+              </TabsTrigger>
+              <TabsTrigger value="gmail-setup" className="gap-2">
+                <Envelope size={16} />
+                Gmail Setup
+              </TabsTrigger>
+              <TabsTrigger value="sync-status" className="gap-2">
+                <TrendUp size={16} />
+                Sync Status
+              </TabsTrigger>
+              <TabsTrigger value="review-queue" className="gap-2">
+                <Gear size={16} />
+                Review Queue
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="applications" className="space-y-4">
+              <ApplicationList 
+                applications={applications} 
+                onApplicationsChange={setApplications}
+              />
+            </TabsContent>
+
+            <TabsContent value="gmail-setup" className="space-y-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <GmailAuth />
+                <div className="space-y-4">
+                  <GmailSyncStatus onApplicationAdd={handleAddApplication} />
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="sync-status" className="space-y-4">
+              <GmailSyncStatus onApplicationAdd={handleAddApplication} />
+            </TabsContent>
+
+            <TabsContent value="review-queue" className="space-y-4">
+              <EmailReviewQueue onApplicationAdd={handleAddApplication} />
+            </TabsContent>
+          </Tabs>
         </main>
       </div>
       

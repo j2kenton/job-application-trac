@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { JobApplication, ApplicationStatus, ParsedEmailData } from '@/lib/types';
 import { filterByStatus, sortByDate, statusLabels, findDuplicate, createApplication, updateApplication } from '@/lib/applications';
-import { Plus, Filter, Briefcase } from '@phosphor-icons/react';
+import { Plus, Funnel, Briefcase } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 
 interface ApplicationListProps {
@@ -75,6 +75,13 @@ export function ApplicationList({ applications, onApplicationsChange }: Applicat
     handleAddApplication(applicationData);
   };
 
+  const handleClearAllApplications = () => {
+    if (window.confirm(`Are you sure you want to delete all ${applications.length} applications? This action cannot be undone.`)) {
+      onApplicationsChange([]);
+      toast.success('All applications cleared');
+    }
+  };
+
   const getStatusCounts = () => {
     const counts: Record<ApplicationStatus | 'all', number> = {
       all: applications.length,
@@ -98,7 +105,7 @@ export function ApplicationList({ applications, onApplicationsChange }: Applicat
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <div className="flex items-center gap-2">
-          <Filter size={20} />
+          <Funnel size={20} />
           <Select
             value={statusFilter}
             onValueChange={(value) => setStatusFilter(value as ApplicationStatus | 'all')}
@@ -126,6 +133,15 @@ export function ApplicationList({ applications, onApplicationsChange }: Applicat
             <Plus size={16} />
             Add Application
           </Button>
+          {applications.length > 0 && (
+            <Button 
+              variant="outline" 
+              onClick={handleClearAllApplications}
+              className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+            >
+              Clear All
+            </Button>
+          )}
         </div>
       </div>
 

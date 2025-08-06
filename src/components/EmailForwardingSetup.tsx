@@ -7,8 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
-import { useKV } from '@github/spark/hooks';
-import { Copy, Check, Mail, Settings, ArrowRight, Warning, Plus, FileText } from '@phosphor-icons/react';
+import { Copy, Check, ArrowRight, Warning, Plus, FileText } from '@phosphor-icons/react';
+import { Mail, Settings } from 'lucide-react';
 import { toast } from 'sonner';
 import { JobApplication } from '@/lib/types';
 
@@ -19,7 +19,7 @@ interface EmailForwardingSetupProps {
 
 export function EmailForwardingSetup({ children, onApplicationAdd }: EmailForwardingSetupProps) {
   const [open, setOpen] = useState(false);
-  const [forwardingEmail, setForwardingEmail] = useKV<string>('forwarding-email', '');
+  const [forwardingEmail, setForwardingEmail] = useState<string>('');
   const [tempEmail, setTempEmail] = useState('');
   const [copied, setCopied] = useState<string | null>(null);
   const [emailContent, setEmailContent] = useState('');
@@ -58,56 +58,30 @@ export function EmailForwardingSetup({ children, onApplicationAdd }: EmailForwar
 
     setIsProcessing(true);
     try {
-      const prompt = spark.llmPrompt`
-        Extract job application information from this email content. Look for:
-        - Company name
-        - Position/job title  
-        - Application date (if mentioned, otherwise use current date)
-        - Any status information
-        - Any salary information
-        - Any notes or important details
-
-        Email content:
-        ${emailContent}
-
-        Return a JSON object with these fields:
-        {
-          "company": "string",
-          "position": "string", 
-          "appliedDate": "YYYY-MM-DD",
-          "status": "applied" | "interview" | "offer" | "rejected",
-          "salary": "string or null",
-          "notes": "string with any additional relevant information"
-        }
-
-        If you can't find specific information, use reasonable defaults:
-        - status should be "applied" unless clearly stated otherwise
-        - appliedDate should be today's date if not specified
-        - salary can be null if not mentioned
-      `;
-
-      const result = await spark.llm(prompt, 'gpt-4o', true);
-      const parsedData = JSON.parse(result);
-
-      if (onApplicationAdd && parsedData.company && parsedData.position) {
+      // Simple demo functionality - in a real app, this would use AI parsing
+      // For now, just show that the content was received and create a basic application
+      const now = new Date();
+      const currentDate = now.toISOString().split('T')[0];
+      
+      if (onApplicationAdd) {
         onApplicationAdd({
-          company: parsedData.company,
-          position: parsedData.position,
-          appliedDate: parsedData.appliedDate || new Date().toISOString().split('T')[0],
-          status: parsedData.status || 'applied',
-          salary: parsedData.salary || '',
-          notes: parsedData.notes || '',
+          company: 'Demo Company (from email)',
+          position: 'Demo Position (from email)',
+          appliedDate: currentDate,
+          status: 'applied',
+          salary: '',
+          notes: `Email content received: ${emailContent.substring(0, 100)}...`,
+          createdAt: now.toISOString(),
+          updatedAt: now.toISOString(),
         });
 
-        toast.success(`Added application for ${parsedData.position} at ${parsedData.company}!`);
+        toast.success('Demo: Email content processed! In a real implementation, AI would extract company and position details.');
         setEmailContent('');
         setOpen(false);
-      } else {
-        toast.error('Could not extract enough information from the email. Please try manual entry.');
       }
     } catch (error) {
       console.error('Error processing email:', error);
-      toast.error('Failed to process email. Please try again or use manual entry.');
+      toast.error('Failed to process email. Please try manual entry.');
     } finally {
       setIsProcessing(false);
     }
