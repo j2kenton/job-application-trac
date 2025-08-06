@@ -57,9 +57,16 @@ export function LinkedInAuth({ onProfileUpdate }: LinkedInAuthProps) {
       setIsLoading(true);
       try {
         await linkedInService.initialize();
-        const userProfile = await linkedInService.getProfile();
-        setProfile(userProfile);
-        onProfileUpdate?.(userProfile);
+        // Skip profile fetching - just show connected status
+        const mockProfile = {
+          id: 'connected',
+          firstName: 'LinkedIn',
+          lastName: 'User',
+          emailAddress: 'Connected',
+          profilePicture: undefined
+        };
+        setProfile(mockProfile);
+        onProfileUpdate?.(mockProfile);
       } catch (error) {
         console.error('Error checking LinkedIn auth status:', error);
         setError('Failed to verify LinkedIn authentication');
@@ -86,9 +93,16 @@ export function LinkedInAuth({ onProfileUpdate }: LinkedInAuthProps) {
       setIsLoading(true);
       try {
         await linkedInService.handleCallback(code, state);
-        const userProfile = await linkedInService.getProfile();
-        setProfile(userProfile);
-        onProfileUpdate?.(userProfile);
+        // Skip profile fetching - just show connected status
+        const mockProfile = {
+          id: 'connected',
+          firstName: 'LinkedIn',
+          lastName: 'User',
+          emailAddress: 'Connected',
+          profilePicture: undefined
+        };
+        setProfile(mockProfile);
+        onProfileUpdate?.(mockProfile);
         setError(null);
         
         // Clean up URL
