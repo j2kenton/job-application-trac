@@ -302,7 +302,8 @@ class LinkedInService {
     const storedState = localStorage.getItem('linkedin_oauth_state');
     
     if (state !== storedState) {
-      throw new Error('Invalid OAuth state parameter');
+      console.warn('OAuth state mismatch:', { received: state, stored: storedState });
+      throw new Error('OAuth state validation failed - possible CSRF attack or stale request');
     }
 
     localStorage.removeItem('linkedin_oauth_state');
@@ -395,43 +396,30 @@ class LinkedInService {
     if (!this.accessToken) return null;
 
     try {
-      // Get basic profile info
-      const profileResponse = await fetch('https://api.linkedin.com/v2/people/~?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))', {
-        headers: {
-          'Authorization': `Bearer ${this.accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!profileResponse.ok) {
-        throw new Error(`Failed to fetch LinkedIn profile: ${profileResponse.status}`);
-      }
-
-      const profileData = await profileResponse.json();
-
-      // Get email address separately (requires email scope)
-      const emailResponse = await fetch('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))', {
-        headers: {
-          'Authorization': `Bearer ${this.accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      let emailAddress = '';
-      if (emailResponse.ok) {
-        const emailData = await emailResponse.json();
-        emailAddress = emailData.elements?.[0]?.['handle~']?.emailAddress || '';
-      }
+      // Use backend proxy to avoid CORS issues
+      const backendUrl = import.meta.env.VITE_LINKEDIN_BACKEND_URL || 'http://localhost:3001';
       
-      return {
-        id: profileData.id,
-        firstName: profileData.firstName?.localized?.en_US || '',
-        lastName: profileData.lastName?.localized?.en_US || '',
-        emailAddress: emailAddress,
-        profilePicture: profileData.profilePicture?.displayImage?.elements?.[0]?.identifiers?.[0]?.identifier
-      };
+      const response = await fetch(`${backendUrl}/api/linkedin/profile`, {
+        headers: {
+          'Authorization': `Bearer ${this.accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch LinkedIn profile: ${response.status}`);
+      }
+
+      const profileData = await response.json();
+      return profileData;
     } catch (error) {
       console.error('Error fetching LinkedIn profile:', error);
+      
+      if (error.message.includes('Failed to fetch')) {
+        console.warn('Backend not available, profile fetch failed');
+        return null;
+      }
+      
       return null;
     }
   }
