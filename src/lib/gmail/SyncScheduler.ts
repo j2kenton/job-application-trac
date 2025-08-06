@@ -71,60 +71,41 @@ class SyncScheduler {
     }
   }
 
+  // Removed automatic scheduling - only manual sync now
   startScheduler(): void {
-    if (this.isScheduled) return;
-
-    this.isScheduled = true;
-    this.scheduleNextSync();
-    console.log('Gmail sync scheduler started');
+    // Deprecated - no automatic scheduling
+    console.log('Automatic scheduling disabled - sync only on app start or manual trigger');
   }
 
   stopScheduler(): void {
     this.isScheduled = false;
-    console.log('Gmail sync scheduler stopped');
+    console.log('Sync scheduler stopped');
   }
 
-  private scheduleNextSync(): void {
-    if (!this.isScheduled) return;
-
-    const now = new Date();
-    const scheduledTime = this.getNextSyncTime();
-    const timeUntilSync = scheduledTime.getTime() - now.getTime();
-
-    console.log(`Next Gmail sync scheduled for: ${scheduledTime.toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' })}`);
-
-    setTimeout(async () => {
-      if (this.isScheduled && !this.syncInProgress) {
-        try {
-          await this.performSync();
-        } catch (error) {
-          console.error('Scheduled sync failed:', error);
-        } finally {
-          this.scheduleNextSync(); // Schedule the next sync
-        }
-      }
-    }, timeUntilSync);
-  }
-
-  private getNextSyncTime(): Date {
-    const now = new Date();
-    const israelTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }));
-    
-    // Set to 9:00 AM Israel time
-    const syncTime = new Date(israelTime);
-    syncTime.setHours(9, 0, 0, 0);
-
-    // If it's already past 9 AM today, schedule for tomorrow
-    if (israelTime.getTime() >= syncTime.getTime()) {
-      syncTime.setDate(syncTime.getDate() + 1);
+  // Perform initial sync when app starts (if authenticated)
+  async performInitialSync(onApplicationAdd?: (application: Omit<JobApplication, 'id'>) => void): Promise<void> {
+    if (!gmailAuth.getAuthState().isAuthenticated) {
+      console.log('Not authenticated - skipping initial sync');
+      return;
     }
 
-    // Convert back to local time
-    const utcOffset = now.getTimezoneOffset() * 60000;
-    const israelOffset = 3 * 60 * 60 * 1000; // UTC+3
-    const localSyncTime = new Date(syncTime.getTime() - israelOffset + utcOffset);
+    // Only sync if last sync was more than 1 hour ago or never synced
+    if (this.lastSyncResult) {
+      const lastSyncTime = new Date(this.lastSyncResult.timestamp);
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+      
+      if (lastSyncTime > oneHourAgo) {
+        console.log('Recent sync found - skipping initial sync');
+        return;
+      }
+    }
 
-    return localSyncTime;
+    console.log('Performing initial sync on app start...');
+    try {
+      await this.performSync(onApplicationAdd);
+    } catch (error) {
+      console.error('Initial sync failed:', error);
+    }
   }
 
   async performSync(onApplicationAdd?: (application: Omit<JobApplication, 'id'>) => void): Promise<SyncResult> {
@@ -411,26 +392,6 @@ class SyncScheduler {
     });
   }
 
-  // Get time until next sync in a human-readable format
-  getTimeUntilNextSync(): string {
-    const nextSync = this.getNextSyncTime();
-    const now = new Date();
-    const diff = nextSync.getTime() - now.getTime();
-
-    if (diff <= 0) return 'Overdue';
-
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-    if (hours > 24) {
-      const days = Math.floor(hours / 24);
-      return `${days} day${days > 1 ? 's' : ''}`;
-    } else if (hours > 0) {
-      return `${hours}h ${minutes}m`;
-    } else {
-      return `${minutes}m`;
-    }
-  }
 }
 
 export const syncScheduler = SyncScheduler.getInstance();

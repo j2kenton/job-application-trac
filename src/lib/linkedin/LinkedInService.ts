@@ -35,11 +35,12 @@ class LinkedInService {
 
   constructor() {
     this.clientId = import.meta.env.VITE_LINKEDIN_CLIENT_ID || null;
-    this.redirectUri = import.meta.env.VITE_LINKEDIN_REDIRECT_URI || `${window.location.origin}/linkedin/callback`;
+    // Use current origin for redirect - LinkedIn will redirect back to the main app
+    this.redirectUri = import.meta.env.VITE_LINKEDIN_REDIRECT_URI || `${window.location.origin}`;
   }
 
   /**
-   * Initialize LinkedIn SDK
+   * Initialize LinkedIn service
    */
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
@@ -49,42 +50,8 @@ class LinkedInService {
       return;
     }
 
-    // Load LinkedIn SDK
-    await this.loadLinkedInSDK();
+    // Initialize without loading SDK - use pure OAuth flow
     this.isInitialized = true;
-  }
-
-  /**
-   * Load LinkedIn SDK script
-   */
-  private loadLinkedInSDK(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (document.getElementById('linkedin-sdk')) {
-        resolve();
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.id = 'linkedin-sdk';
-      script.src = 'https://platform.linkedin.com/in.js';
-      script.async = true;
-      script.defer = true;
-      
-      script.onload = () => {
-        // Initialize LinkedIn API
-        if (window.IN) {
-          window.IN.init({
-            api_key: this.clientId,
-            authorize: true,
-            onLoad: 'onLinkedInLoad'
-          });
-        }
-        resolve();
-      };
-      
-      script.onerror = () => reject(new Error('Failed to load LinkedIn SDK'));
-      document.head.appendChild(script);
-    });
   }
 
   /**
@@ -133,7 +100,7 @@ class LinkedInService {
   }
 
   /**
-   * Initiate LinkedIn OAuth flow
+   * Initiate LinkedIn OAuth flow using popup with improved error handling
    */
   async authenticate(): Promise<void> {
     if (!this.isInitialized) {
@@ -145,23 +112,184 @@ class LinkedInService {
     }
 
     const scopes = [
-      'r_liteprofile',
-      'r_emailaddress',
-      'w_member_social'
+      'profile',
+      'email'
     ].join(' ');
 
+    const state = this.generateState();
     const authUrl = new URL('https://www.linkedin.com/oauth/v2/authorization');
     authUrl.searchParams.append('response_type', 'code');
     authUrl.searchParams.append('client_id', this.clientId);
     authUrl.searchParams.append('redirect_uri', this.redirectUri!);
     authUrl.searchParams.append('scope', scopes);
-    authUrl.searchParams.append('state', this.generateState());
+    authUrl.searchParams.append('state', state);
 
     // Store state for validation
-    localStorage.setItem('linkedin_oauth_state', authUrl.searchParams.get('state')!);
+    localStorage.setItem('linkedin_oauth_state', state);
 
-    // Redirect to LinkedIn authorization
-    window.location.href = authUrl.toString();
+    console.log('LinkedIn OAuth URL:', authUrl.toString());
+    console.log('Redirect URI:', this.redirectUri);
+    console.log('Client ID:', this.clientId);
+    console.log('Scopes:', scopes);
+
+    return new Promise((resolve, reject) => {
+      // Open popup window with additional parameters to help with LinkedIn SDK issues
+      const popup = window.open(
+        authUrl.toString(),
+        'linkedin-auth',
+        'width=600,height=700,scrollbars=yes,resizable=yes,location=yes,toolbar=no,menubar=no,status=no'
+      );
+
+      if (!popup) {
+        reject(new Error('Popup was blocked. Please allow popups for this site.'));
+        return;
+      }
+
+      let isResolved = false;
+      let hasStartedAuth = false;
+
+      // Add error handling for popup window
+      const handlePopupError = (error: any) => {
+        console.warn('LinkedIn popup encountered an error (this may be normal):', error);
+        // Don't automatically reject on popup errors as they might be related to LinkedIn's internal scripts
+        // Instead, continue monitoring for successful authentication
+      };
+
+      // Check for popup completion
+      const checkClosed = setInterval(() => {
+        if (popup.closed && !isResolved) {
+          clearInterval(checkClosed);
+          cleanup();
+          
+          // Give a brief delay to see if the authentication was successful
+          // Sometimes the popup closes before we can detect the success
+          setTimeout(() => {
+            if (!isResolved) {
+              // Check if we have a successful auth result in localStorage or URL
+              const urlParams = new URLSearchParams(window.location.search);
+              const code = urlParams.get('code');
+              const state = urlParams.get('state');
+              
+              if (code && state) {
+                // Success case - handle the callback
+                this.handleCallback(code, state)
+                  .then(() => resolve())
+                  .catch(err => reject(err));
+              } else if (hasStartedAuth) {
+                reject(new Error('LinkedIn authentication was cancelled by user'));
+              } else {
+                reject(new Error('LinkedIn popup closed unexpectedly. Please try again or check for popup blockers.'));
+              }
+            }
+          }, 500);
+        }
+      }, 1000);
+
+      // Check if popup has navigated to LinkedIn (indicating authentication started)
+      const checkAuthStart = setInterval(() => {
+        try {
+          if (popup.location && popup.location.hostname.includes('linkedin.com')) {
+            hasStartedAuth = true;
+            clearInterval(checkAuthStart);
+          }
+        } catch (error) {
+          // Cross-origin error is expected when popup navigates to LinkedIn
+          // This actually indicates the auth has started
+          hasStartedAuth = true;
+          clearInterval(checkAuthStart);
+        }
+      }, 500);
+
+      // Timeout after 5 minutes
+      const timeout = setTimeout(() => {
+        if (!isResolved) {
+          cleanup();
+          popup.close();
+          reject(new Error('LinkedIn authentication timed out. Please try again.'));
+        }
+      }, 300000); // 5 minutes
+
+      // Listen for messages from popup
+      const messageHandler = (event: MessageEvent) => {
+        if (event.origin !== window.location.origin || isResolved) return;
+
+        if (event.data.type === 'LINKEDIN_AUTH_SUCCESS') {
+          cleanup();
+          popup.close();
+          resolve();
+        } else if (event.data.type === 'LINKEDIN_AUTH_ERROR') {
+          cleanup();
+          popup.close();
+          reject(new Error(event.data.error || 'LinkedIn authentication failed'));
+        }
+      };
+
+      let cleanup = () => {
+        isResolved = true;
+        clearInterval(checkClosed);
+        clearInterval(checkAuthStart);
+        clearTimeout(timeout);
+        window.removeEventListener('message', messageHandler);
+        
+        // Safely remove popup event listener only if we can access the popup
+        try {
+          if (popup && !popup.closed) {
+            popup.removeEventListener('error', handlePopupError);
+          }
+        } catch (e) {
+          // Ignore SecurityError when popup is on different origin
+          console.warn('Could not remove popup event listener (this is normal):', e.message);
+        }
+      };
+
+      window.addEventListener('message', messageHandler);
+
+      // Handle potential errors in popup (but don't fail immediately)
+      // Only add listener if we can access the popup
+      try {
+        popup.addEventListener('error', handlePopupError);
+      } catch (e) {
+        console.warn('Could not add popup error listener (this is normal):', e.message);
+      }
+
+      // Monitor for successful redirect back to our app
+      const checkForSuccess = setInterval(() => {
+        try {
+          // Check if popup has returned to our domain with auth code
+          if (popup.location && popup.location.origin === window.location.origin) {
+            const urlParams = new URLSearchParams(popup.location.search);
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            const error = urlParams.get('error');
+
+            if (code && state) {
+              clearInterval(checkForSuccess);
+              cleanup();
+              popup.close();
+              
+              // Handle the callback
+              this.handleCallback(code, state)
+                .then(() => resolve())
+                .catch(err => reject(err));
+            } else if (error) {
+              clearInterval(checkForSuccess);
+              cleanup();
+              popup.close();
+              reject(new Error(`LinkedIn authentication error: ${error}`));
+            }
+          }
+        } catch (e) {
+          // Cross-origin access - continue monitoring
+        }
+      }, 1000);
+
+      // Clean up the success check interval
+      const originalCleanup = cleanup;
+      cleanup = () => {
+        clearInterval(checkForSuccess);
+        originalCleanup();
+      };
+    });
   }
 
   /**
@@ -183,27 +311,27 @@ class LinkedInService {
 
   /**
    * Exchange authorization code for access token
+   * Note: This requires a backend service due to CORS restrictions
    */
   private async exchangeCodeForToken(code: string): Promise<any> {
-    const response = await fetch('https://www.linkedin.com/oauth/v2/accessToken', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        grant_type: 'authorization_code',
-        code: code,
-        redirect_uri: this.redirectUri!,
-        client_id: this.clientId!,
-        client_secret: import.meta.env.VITE_LINKEDIN_CLIENT_SECRET || ''
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to exchange code for token');
+    try {
+      // In a production app, this should call your backend API
+      // For development, we'll show an informative error
+      
+      console.error('LinkedIn token exchange requires a backend service due to CORS restrictions');
+      console.log('Authorization code received:', code);
+      console.log('To complete the integration, implement a backend endpoint that:');
+      console.log('1. Receives the authorization code');
+      console.log('2. Exchanges it for an access token using LinkedIn API');
+      console.log('3. Returns the token to the frontend');
+      
+      // For demo purposes, we'll simulate a token (this won't work for real API calls)
+      throw new Error('LinkedIn integration requires a backend service for token exchange. See console for implementation details.');
+      
+    } catch (error) {
+      console.error('Token exchange error:', error);
+      throw new Error('LinkedIn authentication requires a backend service to complete. This is due to CORS security restrictions.');
     }
-
-    return response.json();
   }
 
   /**
@@ -213,25 +341,40 @@ class LinkedInService {
     if (!this.accessToken) return null;
 
     try {
-      const response = await fetch('https://api.linkedin.com/v2/people/~?projection=(id,firstName,lastName,emailAddress,profilePicture(displayImage~:playableStreams))', {
+      // Get basic profile info
+      const profileResponse = await fetch('https://api.linkedin.com/v2/people/~?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))', {
         headers: {
           'Authorization': `Bearer ${this.accessToken}`,
           'Content-Type': 'application/json'
         }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch LinkedIn profile');
+      if (!profileResponse.ok) {
+        throw new Error(`Failed to fetch LinkedIn profile: ${profileResponse.status}`);
       }
 
-      const data = await response.json();
+      const profileData = await profileResponse.json();
+
+      // Get email address separately (requires email scope)
+      const emailResponse = await fetch('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))', {
+        headers: {
+          'Authorization': `Bearer ${this.accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      let emailAddress = '';
+      if (emailResponse.ok) {
+        const emailData = await emailResponse.json();
+        emailAddress = emailData.elements?.[0]?.['handle~']?.emailAddress || '';
+      }
       
       return {
-        id: data.id,
-        firstName: data.firstName?.localized?.en_US || '',
-        lastName: data.lastName?.localized?.en_US || '',
-        emailAddress: data.emailAddress,
-        profilePicture: data.profilePicture?.displayImage?.elements?.[0]?.identifiers?.[0]?.identifier
+        id: profileData.id,
+        firstName: profileData.firstName?.localized?.en_US || '',
+        lastName: profileData.lastName?.localized?.en_US || '',
+        emailAddress: emailAddress,
+        profilePicture: profileData.profilePicture?.displayImage?.elements?.[0]?.identifiers?.[0]?.identifier
       };
     } catch (error) {
       console.error('Error fetching LinkedIn profile:', error);
@@ -327,14 +470,6 @@ class LinkedInService {
    */
   isConfigured(): boolean {
     return !!(this.clientId && import.meta.env.VITE_LINKEDIN_CLIENT_SECRET);
-  }
-}
-
-// Global declaration for LinkedIn SDK
-declare global {
-  interface Window {
-    IN: any;
-    onLinkedInLoad?: () => void;
   }
 }
 

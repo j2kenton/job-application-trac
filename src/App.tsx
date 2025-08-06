@@ -2,9 +2,13 @@ import { ApplicationList } from './components/ApplicationList';
 import { EmailForwardingSetup } from './components/EmailForwardingSetup';
 import { GmailAuth } from './components/GmailAuth';
 import { GmailSyncStatus } from './components/GmailSyncStatus';
+import { LinkedInAuth } from './components/LinkedInAuth';
+import { LinkedInSyncStatus } from './components/LinkedInSyncStatus';
 import { EmailReviewQueue } from './components/EmailReviewQueue';
 import { JobApplication } from './lib/types';
-import { Briefcase, TrendUp, Gear, Envelope } from '@phosphor-icons/react';
+import { syncScheduler } from './lib/gmail/SyncScheduler';
+import { Briefcase, TrendUp, Gear, Envelope, LinkedinLogo } from '@phosphor-icons/react';
+// Test comment for fixed file monitor
 import { useState, useEffect } from 'react';
 import { Toaster } from '@/components/ui/sonner';
 import { Button } from '@/components/ui/button';
@@ -24,6 +28,138 @@ function App() {
   useEffect(() => {
     localStorage.setItem('job-applications', JSON.stringify(applications));
   }, [applications]);
+
+  // Perform initial sync on app start
+  useEffect(() => {
+    const performInitialSync = async () => {
+      try {
+        await syncScheduler.performInitialSync(handleAddApplication);
+      } catch (error) {
+        console.error('Initial sync failed:', error);
+      }
+    };
+
+    performInitialSync();
+  }, []);
+
+  // Handle external errors (browser extensions, etc.)
+  useEffect(() => {
+    const handleGlobalError = (event: ErrorEvent) => {
+      // Suppress browser extension errors that don't affect our functionality
+      if (event.message && (
+        event.message.includes('message channel closed') ||
+        event.message.includes('listener indicated an asynchronous response') ||
+        event.message.includes('chrome-extension://') ||
+        event.message.includes('moz-extension://')
+      )) {
+        event.preventDefault();
+        return false;
+      }
+    };
+
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      // Suppress browser extension promise rejections
+      const reason = event.reason;
+      if (reason && (
+        (typeof reason === 'string' && (
+          reason.includes('message channel closed') ||
+          reason.includes('listener indicated an asynchronous response') ||
+          reason.includes('Could not establish connection') ||
+          reason.includes('Receiving end does not exist')
+        )) ||
+        (reason instanceof Error && (
+          reason.message.includes('message channel closed') ||
+          reason.message.includes('listener indicated an asynchronous response') ||
+          reason.message.includes('Could not establish connection') ||
+          reason.message.includes('Receiving end does not exist')
+        ))
+      )) {
+        event.preventDefault();
+        return false;
+      }
+    };
+
+    window.addEventListener('error', handleGlobalError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
+    return () => {
+      window.removeEventListener('error', handleGlobalError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
+  }, []);
+
+  // Handle LinkedIn OAuth callback in popup
+  useEffect(() => {
+    const handleLinkedInCallback = async () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        const error = urlParams.get('error');
+
+        // Check if this is a LinkedIn OAuth callback
+        if (code && state) {
+          try {
+            // Import LinkedIn service dynamically to avoid circular imports
+            const { linkedInService } = await import('./lib/linkedin/LinkedInService');
+            
+            // If we're in a popup window, handle the callback and notify parent
+            if (window.opener && window.opener !== window) {
+              try {
+                await linkedInService.handleCallback(code, state);
+                // Notify parent window of success
+                window.opener.postMessage({
+                  type: 'LINKEDIN_AUTH_SUCCESS'
+                }, window.location.origin);
+                // Add a small delay before closing to ensure message is sent
+                setTimeout(() => window.close(), 100);
+              } catch (error) {
+                // Notify parent window of error
+                window.opener.postMessage({
+                  type: 'LINKEDIN_AUTH_ERROR',
+                  error: error instanceof Error ? error.message : 'Authentication failed'
+                }, window.location.origin);
+                setTimeout(() => window.close(), 100);
+              }
+            }
+          } catch (importError) {
+            console.error('LinkedIn service import error:', importError);
+            if (window.opener && window.opener !== window) {
+              window.opener.postMessage({
+                type: 'LINKEDIN_AUTH_ERROR',
+                error: 'Failed to load LinkedIn service'
+              }, window.location.origin);
+              setTimeout(() => window.close(), 100);
+            }
+          }
+        } else if (error && window.opener && window.opener !== window) {
+          // Handle OAuth error in popup
+          window.opener.postMessage({
+            type: 'LINKEDIN_AUTH_ERROR',
+            error: error
+          }, window.location.origin);
+          setTimeout(() => window.close(), 100);
+        }
+      } catch (generalError) {
+        console.error('LinkedIn callback handler error:', generalError);
+        // If we're in a popup, try to notify parent of the error
+        if (window.opener && window.opener !== window) {
+          try {
+            window.opener.postMessage({
+              type: 'LINKEDIN_AUTH_ERROR',
+              error: 'Callback handler encountered an error'
+            }, window.location.origin);
+            setTimeout(() => window.close(), 100);
+          } catch (messageError) {
+            console.error('Failed to send error message to parent:', messageError);
+            window.close();
+          }
+        }
+      }
+    };
+
+    handleLinkedInCallback();
+  }, []);
 
   const handleAddApplication = (newApp: Omit<JobApplication, 'id'>) => {
     const application: JobApplication = {
@@ -148,7 +284,7 @@ function App() {
 
         <main>
           <Tabs defaultValue="applications" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="applications" className="gap-2">
                 <Briefcase size={16} />
                 Applications
@@ -156,6 +292,10 @@ function App() {
               <TabsTrigger value="gmail-setup" className="gap-2">
                 <Envelope size={16} />
                 Gmail Setup
+              </TabsTrigger>
+              <TabsTrigger value="linkedin-setup" className="gap-2">
+                <LinkedinLogo size={16} />
+                LinkedIn Setup
               </TabsTrigger>
               <TabsTrigger value="sync-status" className="gap-2">
                 <TrendUp size={16} />
@@ -183,8 +323,26 @@ function App() {
               </div>
             </TabsContent>
 
+            <TabsContent value="linkedin-setup" className="space-y-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <LinkedInAuth />
+                <div className="space-y-4">
+                  <LinkedInSyncStatus 
+                    applications={applications} 
+                    onApplicationsChange={setApplications} 
+                  />
+                </div>
+              </div>
+            </TabsContent>
+
             <TabsContent value="sync-status" className="space-y-4">
-              <GmailSyncStatus onApplicationAdd={handleAddApplication} />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <GmailSyncStatus onApplicationAdd={handleAddApplication} />
+                <LinkedInSyncStatus 
+                  applications={applications} 
+                  onApplicationsChange={setApplications} 
+                />
+              </div>
             </TabsContent>
 
             <TabsContent value="review-queue" className="space-y-4">

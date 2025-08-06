@@ -105,10 +105,12 @@ class GmailAuthService {
     // Initialize GAPI
     await new Promise<void>((resolve) => {
       window.gapi?.load('client', async () => {
-        await window.gapi.client.init({
-          apiKey: import.meta.env.VITE_GOOGLE_API_KEY,
-          discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest']
-        });
+        if (window.gapi?.client) {
+          await window.gapi.client.init({
+            apiKey: import.meta.env.VITE_GOOGLE_API_KEY,
+            discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest']
+          });
+        }
         resolve();
       });
     });
@@ -241,26 +243,35 @@ class GmailAuthService {
       const storedUser = localStorage.getItem('gmail_user');
 
       if (storedToken && storedUser) {
-        // Verify token is still valid
-        const response = await fetch(`https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${storedToken}`);
-        
-        if (response.ok) {
-          const tokenInfo = await response.json();
+        // Verify token is still valid using the newer v2 endpoint
+        try {
+          const response = await fetch(`https://www.googleapis.com/oauth2/v2/tokeninfo?access_token=${storedToken}`);
           
-          // Check if token is expired
-          if (tokenInfo.expires_in && tokenInfo.expires_in > 0) {
-            this.authState = {
-              isAuthenticated: true,
-              user: JSON.parse(storedUser),
-              accessToken: storedToken
-            };
-
-            // Set the token in GAPI client
-            window.gapi?.client.setToken({ access_token: storedToken });
+          if (response.ok) {
+            const tokenInfo = await response.json();
             
-            this.notifyListeners();
-            return true;
+            // Check if token is valid and not expired
+            if (tokenInfo.expires_in && tokenInfo.expires_in > 0) {
+              this.authState = {
+                isAuthenticated: true,
+                user: JSON.parse(storedUser),
+                accessToken: storedToken
+              };
+
+              // Set the token in GAPI client
+              window.gapi?.client.setToken({ access_token: storedToken });
+              
+              this.notifyListeners();
+              return true;
+            }
+          } else {
+            // Token is invalid or expired, clear it
+            console.log('Stored token is invalid, clearing...');
+            this.clearStoredAuth();
           }
+        } catch (tokenCheckError) {
+          console.log('Token validation failed, clearing stored auth:', tokenCheckError);
+          this.clearStoredAuth();
         }
       }
 
@@ -269,6 +280,17 @@ class GmailAuthService {
       console.error('Auth status check error:', error);
       return false;
     }
+  }
+
+  private clearStoredAuth(): void {
+    localStorage.removeItem('gmail_access_token');
+    localStorage.removeItem('gmail_user');
+    this.authState = {
+      isAuthenticated: false,
+      user: null,
+      accessToken: null
+    };
+    this.notifyListeners();
   }
 
   private storeTokens(accessToken: string): void {

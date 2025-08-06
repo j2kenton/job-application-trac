@@ -12,7 +12,7 @@ This guide will help you set up LinkedIn integration for your job application tr
 **Important Note**: LinkedIn's API doesn't provide direct access to job applications due to privacy restrictions. This integration focuses on enhancing your existing job tracking with LinkedIn data.
 
 ## Step 1: Create LinkedIn Developer Application
-
+2q
 ### 1.1 Go to LinkedIn Developers
 1. Visit [LinkedIn Developers](https://www.linkedin.com/developers/)
 2. Sign in with your LinkedIn account
@@ -38,10 +38,9 @@ Add these URLs to your app's OAuth 2.0 settings:
 
 **For Development:**
 ```
-http://localhost:5173/linkedin/callback
-http://localhost:3000/linkedin/callback
-http://127.0.0.1:5173/linkedin/callback
+http://localhost/linkedin/callback
 ```
+*Note: LinkedIn supports localhost without specifying a port, which works with any development port.*
 
 **For Production:**
 ```

@@ -18,7 +18,6 @@ export function GmailSyncStatus({ onApplicationAdd }: GmailSyncStatusProps) {
   const [lastSyncResult, setLastSyncResult] = useState<SyncResult | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [timeUntilNext, setTimeUntilNext] = useState<string>('');
 
   useEffect(() => {
     // Load initial data
@@ -45,14 +44,6 @@ export function GmailSyncStatus({ onApplicationAdd }: GmailSyncStatusProps) {
       setIsSyncing(false);
     });
 
-    // Update time until next sync every minute
-    const updateInterval = setInterval(() => {
-      setTimeUntilNext(syncScheduler.getTimeUntilNextSync());
-    }, 60000);
-
-    // Initial time update
-    setTimeUntilNext(syncScheduler.getTimeUntilNextSync());
-
     // Automatic scheduler disabled to prevent infinite loops
     // if (gmailAuth.getAuthState().isAuthenticated) {
     //   syncScheduler.startScheduler();
@@ -61,7 +52,6 @@ export function GmailSyncStatus({ onApplicationAdd }: GmailSyncStatusProps) {
     return () => {
       unsubscribeAuth();
       unsubscribeSync();
-      clearInterval(updateInterval);
     };
   }, []);
 
@@ -214,19 +204,18 @@ export function GmailSyncStatus({ onApplicationAdd }: GmailSyncStatusProps) {
               </div>
             )}
 
-            {/* Next Sync Info */}
+            {/* Sync Info */}
             <div className="space-y-2">
               <h4 className="font-medium text-sm flex items-center gap-2">
                 <Calendar size={16} />
-                Scheduled Sync
+                Sync Mode
               </h4>
               <div className="text-sm text-muted-foreground">
                 <p>
-                  <strong>Next sync:</strong> Daily at 9:00 AM Israel time
-                  {timeUntilNext && ` (in ${timeUntilNext})`}
+                  <strong>Manual sync only</strong> - No automatic scheduling
                 </p>
                 <p className="text-xs mt-1">
-                  Automatically checks for new job-related emails and processes them with AI
+                  Sync when opening the app or by clicking the "Sync Now" button
                 </p>
               </div>
             </div>

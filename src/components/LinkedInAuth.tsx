@@ -4,8 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
 import { Alert, AlertDescription } from './ui/alert';
-import { Loader2, LogIn, LogOut, User, Building, AlertCircle } from 'lucide-react';
+import { Loader2, LogIn, LogOut, User, Building, AlertCircle, Info } from 'lucide-react';
 import { linkedInService, LinkedInProfile } from '../lib/linkedin/LinkedInService';
+import { toast } from 'sonner';
 
 interface LinkedInAuthProps {
   onProfileUpdate?: (profile: LinkedInProfile | null) => void;
@@ -16,6 +17,7 @@ export function LinkedInAuth({ onProfileUpdate }: LinkedInAuthProps) {
   const [profile, setProfile] = useState<LinkedInProfile | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isConfigured, setIsConfigured] = useState(false);
+  const [showPopupWarning, setShowPopupWarning] = useState(false);
 
   useEffect(() => {
     checkConfiguration();
@@ -80,11 +82,32 @@ export function LinkedInAuth({ onProfileUpdate }: LinkedInAuthProps) {
   const handleLogin = async () => {
     setIsLoading(true);
     setError(null);
+    setShowPopupWarning(false);
+
     try {
       await linkedInService.authenticate();
-    } catch (error) {
-      console.error('Error authenticating with LinkedIn:', error);
-      setError('Failed to authenticate with LinkedIn');
+      toast.success('Successfully connected to LinkedIn!');
+    } catch (error: any) {
+      console.error('LinkedIn connection error:', error);
+      
+      if (error.message.includes('Popup was blocked')) {
+        setShowPopupWarning(true);
+        toast.error('Please allow popups for this site and try again.');
+      } else if (error.message.includes('cancelled by user')) {
+        toast.info('LinkedIn connection was cancelled.');
+      } else if (error.message.includes('popup closed unexpectedly')) {
+        setShowPopupWarning(true);
+        toast.error('Popup closed unexpectedly. Please check for popup blockers and try again.');
+      } else if (error.message.includes('Client ID not configured')) {
+        toast.error('LinkedIn integration not configured. Please check your environment variables.');
+      } else if (error.message.includes('backend service')) {
+        toast.warning('LinkedIn authentication requires backend setup for full functionality.');
+        setError('LinkedIn authentication started but requires backend service to complete token exchange.');
+      } else {
+        toast.error('Failed to connect to LinkedIn. Please try again.');
+      }
+      setError(error.message);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -121,7 +144,7 @@ export function LinkedInAuth({ onProfileUpdate }: LinkedInAuthProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Alert>
+            <Alert>
             <AlertCircle className="w-4 h-4" />
             <AlertDescription>
               LinkedIn integration is not configured. Please add your LinkedIn Client ID and Secret to your environment variables.
@@ -131,8 +154,13 @@ export function LinkedInAuth({ onProfileUpdate }: LinkedInAuthProps) {
               <ul className="list-disc list-inside mt-2 space-y-1">
                 <li><code>VITE_LINKEDIN_CLIENT_ID</code></li>
                 <li><code>VITE_LINKEDIN_CLIENT_SECRET</code></li>
-                <li><code>VITE_LINKEDIN_REDIRECT_URI</code> (optional)</li>
+                <li><code>VITE_LINKEDIN_REDIRECT_URI</code> (should be <code>http://localhost:5173</code>)</li>
               </ul>
+              <br />
+              <strong>Important:</strong> Make sure to add <code>http://localhost:5173</code> to the Authorized redirect URLs in your LinkedIn app settings at <a href="https://www.linkedin.com/developers/apps" target="_blank" className="text-blue-600 underline">LinkedIn Developer Console</a>.
+              <br />
+              <br />
+              <strong>Note:</strong> LinkedIn OAuth requires a backend service for token exchange due to CORS security restrictions. This frontend implementation demonstrates the OAuth flow but requires backend completion.
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -218,6 +246,19 @@ export function LinkedInAuth({ onProfileUpdate }: LinkedInAuthProps) {
               </ul>
             </div>
 
+            {showPopupWarning && (
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  <strong>Popup blocked!</strong> Please allow popups for this site in your browser settings, then try again.
+                  <br />
+                  <span className="text-xs text-muted-foreground mt-1 block">
+                    Usually found in your browser's address bar (popup blocked icon) or settings.
+                  </span>
+                </AlertDescription>
+              </Alert>
+            )}
+
             <Button
               onClick={handleLogin}
               disabled={isLoading}
@@ -235,6 +276,12 @@ export function LinkedInAuth({ onProfileUpdate }: LinkedInAuthProps) {
                 </>
               )}
             </Button>
+
+            {!isLoading && (
+              <p className="text-xs text-muted-foreground text-center">
+                Make sure popups are allowed for this site
+              </p>
+            )}
 
             <div className="text-xs text-muted-foreground">
               <p>
