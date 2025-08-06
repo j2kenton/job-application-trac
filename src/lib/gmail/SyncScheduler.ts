@@ -1,6 +1,6 @@
 import { gmailService, ProcessedEmail } from './GmailService';
 import { gmailAuth } from './GmailAuth';
-import { JobApplication } from '../types';
+import { JobApplication, ApplicationStatus } from '../types';
 import gmailFilters from '../../config/gmail-filters.json';
 import syncSettings from '../../config/sync-settings.json';
 
@@ -255,10 +255,13 @@ class SyncScheduler {
   private createApplicationFromEmail(processedEmail: ProcessedEmail): Omit<JobApplication, 'id'> {
     const now = new Date().toISOString();
     
+    // Determine status based on AI analysis
+    const status = this.determineStatusFromEmail(processedEmail);
+    
     return {
       company: processedEmail.extractedData.company || 'Unknown Company',
       position: processedEmail.extractedData.position || 'Unknown Position',
-      status: 'applied',
+      status,
       appliedDate: processedEmail.extractedData.appliedDate || processedEmail.date.split('T')[0],
       notes: this.buildNotesFromEmail(processedEmail),
       contactEmail: processedEmail.extractedData.contactEmail || processedEmail.from,
@@ -269,6 +272,57 @@ class SyncScheduler {
       createdAt: now,
       updatedAt: now
     };
+  }
+
+  private determineStatusFromEmail(processedEmail: ProcessedEmail): ApplicationStatus {
+    const content = processedEmail.content.toLowerCase();
+    const subject = processedEmail.subject.toLowerCase();
+    const notes = processedEmail.extractedData.notes?.toLowerCase() || '';
+    
+    // Check for interview-related keywords and AI analysis
+    const interviewKeywords = [
+      'interview', 'ראיון', 'הראיון', 'interview invitation', 'zoom', 'teams', 'meet',
+      'schedule', 'appointment', 'meeting', 'call', 'phone', 'video call'
+    ];
+    
+    const offerKeywords = [
+      'offer', 'congratulations', 'pleased to offer', 'job offer', 'position offer',
+      'הצעה', 'ההצעה', 'מזל טוב', 'ברכות'
+    ];
+    
+    const rejectionKeywords = [
+      'unfortunately', 'regret', 'not selected', 'other candidate', 'declined',
+      'לצערנו', 'לא נבחרת', 'מועמד אחר'
+    ];
+    
+    // Check AI analysis notes for context clues
+    if (notes.includes('interview') || notes.includes('ראיון')) {
+      return 'interview';
+    }
+    
+    if (notes.includes('offer') || notes.includes('הצעה')) {
+      return 'offer';
+    }
+    
+    if (notes.includes('reject') || notes.includes('unfortunately') || notes.includes('לצערנו')) {
+      return 'rejected';
+    }
+    
+    // Check content and subject for keywords
+    if (interviewKeywords.some(keyword => content.includes(keyword) || subject.includes(keyword))) {
+      return 'interview';
+    }
+    
+    if (offerKeywords.some(keyword => content.includes(keyword) || subject.includes(keyword))) {
+      return 'offer';
+    }
+    
+    if (rejectionKeywords.some(keyword => content.includes(keyword) || subject.includes(keyword))) {
+      return 'rejected';
+    }
+    
+    // Default to applied if no specific status indicators found
+    return 'applied';
   }
 
   private buildNotesFromEmail(processedEmail: ProcessedEmail): string {
