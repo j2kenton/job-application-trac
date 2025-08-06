@@ -27,6 +27,7 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
     jobUrl: '',
     salary: '',
     location: '',
+    emailContent: '',
   });
 
   useEffect(() => {
@@ -55,6 +56,7 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
         jobUrl: '',
         salary: '',
         location: '',
+        emailContent: '',
       });
     }
     
@@ -171,6 +173,17 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
               value={formData.notes || ''}
               onChange={(e) => updateField('notes', e.target.value)}
               rows={4}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="email-content">Email Content</Label>
+            <Textarea
+              id="email-content"
+              value={formData.emailContent || ''}
+              onChange={(e) => updateField('emailContent', e.target.value)}
+              rows={8}
+              className="resize-vertical"
             />
           </div>
 

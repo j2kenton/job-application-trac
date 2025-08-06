@@ -16,6 +16,7 @@ export interface JobApplication {
   jobUrl?: string;
   salary?: string;
   location?: string;
+  emailContent?: string;
   createdAt: string;
   updatedAt: string;
 }
