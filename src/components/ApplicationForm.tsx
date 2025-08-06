@@ -39,10 +39,6 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.company?.trim() || !formData.position?.trim()) {
-      return;
-    }
-
     onSubmit(formData);
     
     if (mode === 'create') {
@@ -79,22 +75,20 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="company">Company *</Label>
+              <Label htmlFor="company">Company</Label>
               <Input
                 id="company"
                 value={formData.company || ''}
                 onChange={(e) => updateField('company', e.target.value)}
-                required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="position">Position *</Label>
+              <Label htmlFor="position">Position</Label>
               <Input
                 id="position"
                 value={formData.position || ''}
                 onChange={(e) => updateField('position', e.target.value)}
-                required
               />
             </div>
 
