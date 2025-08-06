@@ -13,6 +13,8 @@ export interface JobApplication {
   appliedDate: string;
   notes?: string;
   contactEmail?: string;
+  recruiter?: string;
+  interviewer?: string;
   jobUrl?: string;
   salary?: string;
   location?: string;

@@ -24,6 +24,8 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
     appliedDate: new Date().toISOString().split('T')[0],
     notes: '',
     contactEmail: '',
+    recruiter: '',
+    interviewer: '',
     jobUrl: '',
     salary: '',
     location: '',
@@ -49,6 +51,8 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
         appliedDate: new Date().toISOString().split('T')[0],
         notes: '',
         contactEmail: '',
+        recruiter: '',
+        interviewer: '',
         jobUrl: '',
         salary: '',
         location: '',
@@ -146,6 +150,24 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
                 type="email"
                 value={formData.contactEmail || ''}
                 onChange={(e) => updateField('contactEmail', e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="recruiter">Recruiter</Label>
+              <Input
+                id="recruiter"
+                value={formData.recruiter || ''}
+                onChange={(e) => updateField('recruiter', e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="interviewer">Interviewer</Label>
+              <Input
+                id="interviewer"
+                value={formData.interviewer || ''}
+                onChange={(e) => updateField('interviewer', e.target.value)}
               />
             </div>
 

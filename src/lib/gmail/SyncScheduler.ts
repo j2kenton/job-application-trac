@@ -265,6 +265,8 @@ class SyncScheduler {
       appliedDate: processedEmail.extractedData.appliedDate || processedEmail.date.split('T')[0],
       notes: this.buildNotesFromEmail(processedEmail),
       contactEmail: processedEmail.extractedData.contactEmail || processedEmail.from,
+      recruiter: '',
+      interviewer: '',
       jobUrl: processedEmail.extractedData.jobUrl || '',
       salary: processedEmail.extractedData.salary || '',
       location: '',
