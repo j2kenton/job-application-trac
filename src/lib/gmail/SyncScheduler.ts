@@ -259,12 +259,12 @@ class SyncScheduler {
     const status = this.determineStatusFromEmail(processedEmail);
     
     return {
-      company: processedEmail.extractedData.company || 'Unknown Company',
-      position: processedEmail.extractedData.position || 'Unknown Position',
+      company: processedEmail.extractedData.company || '',
+      position: processedEmail.extractedData.position || '',
       status,
       appliedDate: processedEmail.extractedData.appliedDate || processedEmail.date.split('T')[0],
       notes: this.buildNotesFromEmail(processedEmail),
-      contactEmail: processedEmail.extractedData.contactEmail || processedEmail.from,
+      contactEmail: processedEmail.extractedData.contactEmail || '',
       jobUrl: processedEmail.extractedData.jobUrl || '',
       salary: processedEmail.extractedData.salary || '',
       location: '',
