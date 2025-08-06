@@ -18,8 +18,13 @@
     "interview preparation", "resume building"
   ],
   "confidenceThresholds": {
-    "autoProcess": 0.25,
-    "reviewQueue": 0.0,
-    "discard": 0.0
+    "autoProcess": 0.85,
+    "reviewQueue": 0.25,
+    "discard": 0.25,
+    "aiProcessing": {
+      "autoProcess": 0.85,
+      "reviewQueue": 0.25,
+      "discard": 0.25
+    }
   }
 }

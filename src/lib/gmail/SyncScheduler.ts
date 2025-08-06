@@ -160,14 +160,12 @@ class SyncScheduler {
           const processedEmail = await gmailService.processEmail(email);
           processed++;
 
-          // Determine action based on confidence
-          // For AI-boosted emails, require 85% confidence for auto-processing
-          const autoProcessThreshold = processedEmail.extractedData.notes?.includes('AI analysis') 
-            ? 0.85 
-            : gmailFilters.confidenceThresholds.autoProcess;
-            
-          if (processedEmail.confidence >= autoProcessThreshold) {
-            // Auto-process high confidence emails
+          // Two-stage processing system
+          const isAIProcessed = processedEmail.extractedData.notes?.includes('AI analysis');
+          
+          // Stage 1: Manual confidence check
+          if (processedEmail.confidence >= gmailFilters.confidenceThresholds.autoProcess) {
+            // High confidence (85%+) - auto-process
             const application = this.createApplicationFromEmail(processedEmail);
             
             if (onApplicationAdd) {
@@ -184,10 +182,9 @@ class SyncScheduler {
             }
 
           } else if (processedEmail.confidence >= gmailFilters.confidenceThresholds.reviewQueue) {
-            // Check if this email is already in the review queue (prevent duplicates)
+            // Medium confidence (25-84%) - add to review queue
             const existingItem = this.reviewQueue.find(item => item.email.id === email.id);
             if (!existingItem) {
-              // Add to review queue
               const reviewItem: ReviewQueueItem = {
                 id: `review_${email.id}_${Date.now()}`,
                 email: processedEmail,
@@ -201,8 +198,13 @@ class SyncScheduler {
             } else {
               console.log(`Email ${email.id} already in review queue, skipping`);
             }
+
+          } else {
+            // Stage 2: Low confidence (<25%) - this will be handled by AI processing inside processEmail method
+            // The processEmail method already includes AI enhancement for low confidence emails
+            // If we reach here, it means the email was processed (including AI if applicable) and still has low confidence
+            console.log(`Email ${email.id} rejected (confidence: ${processedEmail.confidence})`);
           }
-          // Emails below reviewQueue threshold are discarded (no action needed)
 
         } catch (emailError) {
           console.error(`Error processing email ${email.id}:`, emailError);

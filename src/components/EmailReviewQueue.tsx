@@ -63,14 +63,14 @@ export function EmailReviewQueue({ onApplicationAdd }: EmailReviewQueueProps) {
   };
 
   const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 0.6) return 'bg-green-100 text-green-800';
-    if (confidence >= 0.4) return 'bg-yellow-100 text-yellow-800';
+    if (confidence >= 0.85) return 'bg-green-100 text-green-800';
+    if (confidence >= 0.25) return 'bg-yellow-100 text-yellow-800';
     return 'bg-red-100 text-red-800';
   };
 
   const getConfidenceLabel = (confidence: number) => {
-    if (confidence >= 0.6) return 'High';
-    if (confidence >= 0.4) return 'Medium';
+    if (confidence >= 0.85) return 'High';
+    if (confidence >= 0.25) return 'Review';
     return 'Low';
   };
 
@@ -103,7 +103,7 @@ export function EmailReviewQueue({ onApplicationAdd }: EmailReviewQueueProps) {
           <Alert>
             <Envelope className="h-4 w-4" />
             <AlertDescription>
-              No emails pending review. Emails with 25-75% confidence will appear here for manual review.
+              No emails pending review. Emails with 25-84% confidence will appear here for manual review.
             </AlertDescription>
           </Alert>
         </CardContent>
