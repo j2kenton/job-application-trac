@@ -126,7 +126,6 @@ export function EmailForwardingSetup({ children, onApplicationAdd }: EmailForwar
                 <Label htmlFor="email-content">Email Content</Label>
                 <Textarea
                   id="email-content"
-                  placeholder="Paste your job application email here..."
                   value={emailContent}
                   onChange={(e) => setEmailContent(e.target.value)}
                   className="min-h-32 bg-white"
@@ -238,7 +237,6 @@ export function EmailForwardingSetup({ children, onApplicationAdd }: EmailForwar
                   <Input
                     id="your-email"
                     type="email"
-                    placeholder="your.email@gmail.com"
                     value={tempEmail || forwardingEmail}
                     onChange={(e) => setTempEmail(e.target.value)}
                   />

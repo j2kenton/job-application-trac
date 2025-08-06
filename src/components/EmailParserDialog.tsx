@@ -69,7 +69,6 @@ export function EmailParserDialog({ onParsed, children }: EmailParserDialogProps
             <Label htmlFor="email-content">Email Content</Label>
             <Textarea
               id="email-content"
-              placeholder="Paste your job application email content here..."
               value={emailContent}
               onChange={(e) => setEmailContent(e.target.value)}
               rows={6}

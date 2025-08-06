@@ -82,7 +82,6 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
                 id="company"
                 value={formData.company || ''}
                 onChange={(e) => updateField('company', e.target.value)}
-                placeholder="e.g. Tech Corp"
                 required
               />
             </div>
@@ -93,7 +92,6 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
                 id="position"
                 value={formData.position || ''}
                 onChange={(e) => updateField('position', e.target.value)}
-                placeholder="e.g. Software Engineer"
                 required
               />
             </div>
@@ -133,7 +131,6 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
                 id="location"
                 value={formData.location || ''}
                 onChange={(e) => updateField('location', e.target.value)}
-                placeholder="e.g. San Francisco, CA"
               />
             </div>
 
@@ -143,7 +140,6 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
                 id="salary"
                 value={formData.salary || ''}
                 onChange={(e) => updateField('salary', e.target.value)}
-                placeholder="e.g. $120,000 - $150,000"
               />
             </div>
 
@@ -154,7 +150,6 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
                 type="email"
                 value={formData.contactEmail || ''}
                 onChange={(e) => updateField('contactEmail', e.target.value)}
-                placeholder="recruiter@company.com"
               />
             </div>
 
@@ -165,7 +160,6 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
                 type="url"
                 value={formData.jobUrl || ''}
                 onChange={(e) => updateField('jobUrl', e.target.value)}
-                placeholder="https://company.com/jobs/123"
               />
             </div>
           </div>
@@ -176,7 +170,6 @@ export function ApplicationForm({ open, onOpenChange, onSubmit, initialData, mod
               id="notes"
               value={formData.notes || ''}
               onChange={(e) => updateField('notes', e.target.value)}
-              placeholder="Additional notes about this application..."
               rows={4}
             />
           </div>
