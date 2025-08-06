@@ -21,6 +21,9 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
   'http://localhost:3000'
 ];
 
+// Debug log to verify the configuration
+console.log('🔧 DEBUG: Loaded CORS origins:', allowedOrigins);
+
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
