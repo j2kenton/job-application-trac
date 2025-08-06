@@ -23,6 +23,29 @@ export function LinkedInAuth({ onProfileUpdate }: LinkedInAuthProps) {
     checkConfiguration();
     checkAuthStatus();
     handleOAuthCallback();
+    
+    // Listen for LinkedIn authentication success from popup
+    const handleMessage = (event: MessageEvent) => {
+      const isLocalhost = event.origin.includes('localhost') || event.origin.includes('127.0.0.1');
+      if (!isLocalhost) return;
+
+      if (event.data.type === 'LINKEDIN_AUTH_SUCCESS') {
+        console.log('LinkedIn authentication successful, updating UI...');
+        toast.success('Successfully connected to LinkedIn!');
+        setError(null);
+        // Refresh authentication status after successful popup authentication
+        setTimeout(() => {
+          checkAuthStatus();
+        }, 1000); // Small delay to ensure token is stored
+      } else if (event.data.type === 'LINKEDIN_AUTH_ERROR') {
+        console.error('LinkedIn authentication failed:', event.data.error);
+        toast.error('LinkedIn authentication failed: ' + (event.data.error || 'Unknown error'));
+        setError(event.data.error || 'LinkedIn authentication failed');
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
   }, []);
 
   const checkConfiguration = () => {

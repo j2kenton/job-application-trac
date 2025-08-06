@@ -307,9 +307,29 @@ class LinkedInService {
 
     localStorage.removeItem('linkedin_oauth_state');
 
-    // Exchange code for access token
-    const tokenResponse = await this.exchangeCodeForToken(code);
-    this.storeToken(tokenResponse.access_token, tokenResponse.expires_in);
+    try {
+      // Exchange code for access token
+      const tokenResponse = await this.exchangeCodeForToken(code);
+      this.storeToken(tokenResponse.access_token, tokenResponse.expires_in);
+      
+      // Notify parent window of successful authentication
+      if (window.opener) {
+        window.opener.postMessage({
+          type: 'LINKEDIN_AUTH_SUCCESS',
+          timestamp: Date.now()
+        }, window.location.origin);
+      }
+    } catch (error) {
+      // Notify parent window of authentication error
+      if (window.opener) {
+        window.opener.postMessage({
+          type: 'LINKEDIN_AUTH_ERROR',
+          error: error.message,
+          timestamp: Date.now()
+        }, window.location.origin);
+      }
+      throw error;
+    }
   }
 
   /**
