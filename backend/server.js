@@ -142,7 +142,7 @@ app.post('/api/linkedin/token', async (req, res) => {
   }
 });
 
-// LinkedIn profile proxy endpoint (for testing)
+// LinkedIn profile proxy endpoint
 app.get('/api/linkedin/profile', async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
@@ -154,7 +154,13 @@ app.get('/api/linkedin/profile', async (req, res) => {
     }
 
     const accessToken = authHeader.substring(7);
+    
+    console.log('LinkedIn profile request:', {
+      timestamp: new Date().toISOString(),
+      hasToken: !!accessToken
+    });
 
+    // Get basic profile info
     const profileResponse = await fetch(
       'https://api.linkedin.com/v2/people/~?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))',
       {
@@ -166,15 +172,49 @@ app.get('/api/linkedin/profile', async (req, res) => {
     );
 
     if (!profileResponse.ok) {
-      const errorData = await profileResponse.json();
+      console.error('LinkedIn profile fetch failed:', {
+        status: profileResponse.status,
+        statusText: profileResponse.statusText
+      });
       return res.status(profileResponse.status).json({
         error: 'LinkedIn API error',
-        linkedin_error: errorData
+        details: profileResponse.statusText
       });
     }
 
     const profileData = await profileResponse.json();
-    res.json(profileData);
+
+    // Get email address separately (requires email scope)
+    const emailResponse = await fetch('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))', {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    let emailAddress = '';
+    if (emailResponse.ok) {
+      const emailData = await emailResponse.json();
+      emailAddress = emailData.elements?.[0]?.['handle~']?.emailAddress || '';
+    }
+
+    const profile = {
+      id: profileData.id,
+      firstName: profileData.firstName?.localized?.en_US || '',
+      lastName: profileData.lastName?.localized?.en_US || '',
+      emailAddress: emailAddress,
+      profilePicture: profileData.profilePicture?.displayImage?.elements?.[0]?.identifiers?.[0]?.identifier
+    };
+
+    console.log('LinkedIn profile fetch successful:', {
+      id: profile.id,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      hasEmail: !!profile.emailAddress,
+      hasProfilePicture: !!profile.profilePicture
+    });
+
+    res.json(profile);
 
   } catch (error) {
     console.error('LinkedIn profile fetch error:', error);
