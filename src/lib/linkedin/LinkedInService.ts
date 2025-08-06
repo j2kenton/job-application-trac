@@ -125,8 +125,13 @@ class LinkedInService {
     authUrl.searchParams.append('scope', scopes);
     authUrl.searchParams.append('state', state);
 
-    // Store state for validation
-    localStorage.setItem('linkedin_oauth_state', state);
+    // Store state for validation with timestamp to handle multiple concurrent auth attempts
+    const stateData = {
+      state: state,
+      timestamp: Date.now(),
+      redirectUri: this.redirectUri
+    };
+    localStorage.setItem('linkedin_oauth_state', JSON.stringify(stateData));
 
     console.log('LinkedIn OAuth URL:', authUrl.toString());
     console.log('Redirect URI:', this.redirectUri);
@@ -299,10 +304,39 @@ class LinkedInService {
    * Handle OAuth callback
    */
   async handleCallback(code: string, state: string): Promise<void> {
-    const storedState = localStorage.getItem('linkedin_oauth_state');
+    const storedStateData = localStorage.getItem('linkedin_oauth_state');
+    
+    if (!storedStateData) {
+      console.warn('No stored OAuth state found');
+      throw new Error('OAuth state validation failed - no stored state found');
+    }
+
+    let storedState: string;
+    try {
+      const stateObj = JSON.parse(storedStateData);
+      storedState = stateObj.state;
+      
+      // Check if state is too old (older than 10 minutes)
+      const stateAge = Date.now() - stateObj.timestamp;
+      if (stateAge > 10 * 60 * 1000) {
+        console.warn('OAuth state is too old:', { age: stateAge, timestamp: stateObj.timestamp });
+        localStorage.removeItem('linkedin_oauth_state');
+        throw new Error('OAuth state validation failed - state is too old, please try again');
+      }
+    } catch (error) {
+      // Handle legacy string format
+      if (typeof storedStateData === 'string' && !storedStateData.startsWith('{')) {
+        storedState = storedStateData;
+      } else {
+        console.warn('Invalid stored OAuth state format:', storedStateData);
+        localStorage.removeItem('linkedin_oauth_state');
+        throw new Error('OAuth state validation failed - invalid state format');
+      }
+    }
     
     if (state !== storedState) {
       console.warn('OAuth state mismatch:', { received: state, stored: storedState });
+      localStorage.removeItem('linkedin_oauth_state');
       throw new Error('OAuth state validation failed - possible CSRF attack or stale request');
     }
 
