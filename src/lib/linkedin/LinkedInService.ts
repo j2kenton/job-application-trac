@@ -462,30 +462,32 @@ class LinkedInService {
     if (!this.accessToken) return [];
 
     try {
-      // Note: This endpoint may require additional permissions
-      const response = await fetch(`https://api.linkedin.com/v2/companySearch?q=text&text=${encodeURIComponent(query)}`, {
+      // Use backend proxy to avoid CORS issues
+      const backendUrl = import.meta.env.VITE_LINKEDIN_BACKEND_URL || 'http://localhost:3001';
+      
+      const response = await fetch(`${backendUrl}/api/linkedin/companies/search`, {
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${this.accessToken}`,
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({ query })
       });
 
       if (!response.ok) {
-        throw new Error('Failed to search companies');
+        console.warn('Company search failed:', response.status, response.statusText);
+        return [];
       }
 
       const data = await response.json();
-      
-      return data.elements?.map((company: any) => ({
-        id: company.id,
-        name: company.name,
-        industry: company.industry,
-        size: company.size,
-        location: company.location?.country,
-        logoUrl: company.logo?.image
-      })) || [];
+      return data || [];
     } catch (error) {
       console.error('Error searching companies:', error);
+      
+      if (error.message.includes('Failed to fetch')) {
+        console.warn('Backend not available, company search unavailable');
+      }
+      
       return [];
     }
   }
@@ -494,24 +496,24 @@ class LinkedInService {
    * Logout from LinkedIn
    */
   async logout(): Promise<void> {
+    const tokenToRevoke = this.accessToken;
     this.clearStoredToken();
     
-    // Revoke token if possible
-    if (this.accessToken) {
+    // Revoke token via backend to avoid CORS
+    if (tokenToRevoke) {
       try {
-        await fetch('https://api.linkedin.com/v2/oauth2/revoke', {
+        const backendUrl = import.meta.env.VITE_LINKEDIN_BACKEND_URL || 'http://localhost:3001';
+        
+        await fetch(`${backendUrl}/api/linkedin/revoke`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams({
-            token: this.accessToken,
-            client_id: this.clientId!,
-            client_secret: import.meta.env.VITE_LINKEDIN_CLIENT_SECRET || ''
-          })
+            'Authorization': `Bearer ${tokenToRevoke}`,
+            'Content-Type': 'application/json'
+          }
         });
       } catch (error) {
-        console.warn('Failed to revoke LinkedIn token:', error);
+        console.warn('Failed to revoke LinkedIn token via backend:', error);
+        // Don't throw error on logout - token clearing is more important
       }
     }
   }

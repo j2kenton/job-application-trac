@@ -14,10 +14,17 @@ app.use(helmet());
 
 // CORS configuration for multiple frontend ports
 const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
+  'http://localhost:5170',
+  'http://localhost:5171',
+  'http://localhost:5172',
   'http://localhost:5173',
   'http://localhost:5174', 
   'http://localhost:5175',
   'http://localhost:5176',
+  'http://localhost:5177',
+  'http://localhost:5178',
+  'http://localhost:5179',
+  'http://localhost:5180',
   'http://localhost:3000'
 ];
 
@@ -146,6 +153,129 @@ app.post('/api/linkedin/token', async (req, res) => {
   }
 });
 
+// LinkedIn company search proxy endpoint
+app.post('/api/linkedin/companies/search', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ 
+        error: 'Missing or invalid authorization header' 
+      });
+    }
+
+    const accessToken = authHeader.substring(7);
+    const { query } = req.body;
+    
+    if (!query) {
+      return res.status(400).json({ 
+        error: 'Missing required parameter: query' 
+      });
+    }
+
+    console.log('LinkedIn company search request:', {
+      query: query,
+      timestamp: new Date().toISOString()
+    });
+
+    // Search for companies via LinkedIn API
+    const searchResponse = await fetch(
+      `https://api.linkedin.com/v2/companySearch?q=text&text=${encodeURIComponent(query)}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    if (!searchResponse.ok) {
+      console.warn('LinkedIn company search failed:', {
+        status: searchResponse.status,
+        statusText: searchResponse.statusText,
+        query: query
+      });
+      
+      // Return empty results instead of error to gracefully handle API limitations
+      return res.json([]);
+    }
+
+    const searchData = await searchResponse.json();
+    
+    // Transform the data to match expected format
+    const companies = searchData.elements?.map((company) => ({
+      id: company.id,
+      name: company.name,
+      industry: company.industry,
+      size: company.size,
+      location: company.location?.country,
+      logoUrl: company.logo?.image
+    })) || [];
+
+    console.log('LinkedIn company search successful:', {
+      query: query,
+      resultsCount: companies.length
+    });
+
+    res.json(companies);
+
+  } catch (error) {
+    console.error('LinkedIn company search error:', error);
+    // Return empty results instead of error to gracefully handle failures
+    res.json([]);
+  }
+});
+
+// LinkedIn token revocation proxy endpoint
+app.post('/api/linkedin/revoke', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ 
+        error: 'Missing or invalid authorization header' 
+      });
+    }
+
+    const accessToken = authHeader.substring(7);
+    
+    console.log('LinkedIn token revocation request:', {
+      timestamp: new Date().toISOString()
+    });
+
+    // Revoke the token via LinkedIn API
+    const revokeResponse = await fetch('https://api.linkedin.com/v2/oauth2/revoke', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        token: accessToken,
+        client_id: process.env.LINKEDIN_CLIENT_ID,
+        client_secret: process.env.LINKEDIN_CLIENT_SECRET
+      })
+    });
+
+    if (!revokeResponse.ok) {
+      console.warn('LinkedIn token revocation failed:', {
+        status: revokeResponse.status,
+        statusText: revokeResponse.statusText
+      });
+      
+      // Don't fail the logout process - token clearing on frontend is more important
+      return res.json({ success: false, message: 'Token revocation failed but logout completed' });
+    }
+
+    console.log('LinkedIn token revocation successful');
+    res.json({ success: true, message: 'Token revoked successfully' });
+
+  } catch (error) {
+    console.error('LinkedIn token revocation error:', error);
+    // Don't fail the logout process
+    res.json({ success: false, message: 'Token revocation failed but logout completed' });
+  }
+});
+
 // LinkedIn profile proxy endpoint
 app.get('/api/linkedin/profile', async (req, res) => {
   try {
@@ -176,13 +306,27 @@ app.get('/api/linkedin/profile', async (req, res) => {
     );
 
     if (!profileResponse.ok) {
+      // Get more detailed error information
+      let errorDetails = {};
+      try {
+        errorDetails = await profileResponse.json();
+      } catch (e) {
+        errorDetails = { message: 'Unable to parse error response' };
+      }
+
       console.error('LinkedIn profile fetch failed:', {
         status: profileResponse.status,
-        statusText: profileResponse.statusText
+        statusText: profileResponse.statusText,
+        errorDetails: errorDetails,
+        tokenLength: accessToken.length,
+        tokenPrefix: accessToken.substring(0, 10) + '...',
+        timestamp: new Date().toISOString()
       });
+
       return res.status(profileResponse.status).json({
         error: 'LinkedIn API error',
-        details: profileResponse.statusText
+        details: profileResponse.statusText,
+        linkedin_error: errorDetails
       });
     }
 
@@ -251,7 +395,9 @@ app.use('*', (req, res) => {
     available_endpoints: [
       'GET /health',
       'POST /api/linkedin/token',
-      'GET /api/linkedin/profile'
+      'GET /api/linkedin/profile',
+      'POST /api/linkedin/companies/search',
+      'POST /api/linkedin/revoke'
     ]
   });
 });
