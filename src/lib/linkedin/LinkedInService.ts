@@ -211,7 +211,9 @@ class LinkedInService {
 
       // Listen for messages from popup
       const messageHandler = (event: MessageEvent) => {
-        if (event.origin !== window.location.origin || isResolved) return;
+        // Accept messages from any localhost port to handle dev server port variations
+        const isLocalhost = event.origin.includes('localhost') || event.origin.includes('127.0.0.1');
+        if (!isLocalhost || isResolved) return;
 
         if (event.data.type === 'LINKEDIN_AUTH_SUCCESS') {
           cleanup();
