@@ -81,7 +81,10 @@ Configure which emails to process:
   "excludeJobBoards": [
     "noreply@linkedin.com",
     "noreply@indeed.com",
-    "jobs-noreply@linkedin.com"
+    "jobs-noreply@linkedin.com",
+    "hit-reply@linkedin.com",
+    "messages-noreply@linkedin.com",
+    "inmail-hit-reply@linkedin.com",
   ],
   "confidenceThresholds": {
     "autoProcess": 0.75,

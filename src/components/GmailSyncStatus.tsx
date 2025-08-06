@@ -76,7 +76,10 @@ export function GmailSyncStatus({ onApplicationAdd }: GmailSyncStatusProps) {
       return;
     }
 
+    // Clear previous sync results when starting new sync
+    setLastSyncResult(null);
     setIsSyncing(true);
+    
     try {
       const result = await syncScheduler.performSync(onApplicationAdd);
       

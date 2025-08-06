@@ -63,4 +63,71 @@
   body {
     font-family: 'Inter', sans-serif;
   }
+
+  /* Cursor styles for interactive elements */
+  button,
+  [role="button"],
+  [type="button"],
+  [type="submit"],
+  [type="reset"],
+  input[type="checkbox"],
+  input[type="radio"],
+  select,
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [role="button"]:disabled,
+  [type="button"]:disabled,
+  [type="submit"]:disabled,
+  [type="reset"]:disabled,
+  input[type="checkbox"]:disabled,
+  input[type="radio"]:disabled,
+  select:disabled {
+    cursor: not-allowed;
+  }
+
+  a,
+  [role="link"] {
+    cursor: pointer;
+  }
+
+  /* Additional interactive elements */
+  .clickable,
+  [data-clickable="true"],
+  [onClick],
+  [onPointerDown] {
+    cursor: pointer;
+  }
+
+  /* Text selection cursors */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="url"],
+  textarea {
+    cursor: text;
+  }
+
+  /* Resize cursor for textareas */
+  textarea {
+    cursor: text;
+    resize: vertical;
+  }
+
+  /* Default cursor for non-interactive elements */
+  div,
+  span,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  label {
+    cursor: default;
+  }
 }

@@ -9,7 +9,6 @@ import { syncScheduler, ReviewQueueItem } from '@/lib/gmail/SyncScheduler';
 import { JobApplication } from '@/lib/types';
 import { Envelope, Check, X, Eye, Calendar, Buildings, User, LinkSimple } from '@phosphor-icons/react';
 import { toast } from 'sonner';
-import { ProcessingStageIndicator } from './ProcessingStageIndicator';
 
 interface EmailReviewQueueProps {
   onApplicationAdd?: (application: Omit<JobApplication, 'id'>) => void;
@@ -308,17 +307,18 @@ export function EmailReviewQueue({ onApplicationAdd }: EmailReviewQueueProps) {
 
                     <Separator />
 
-                    {/* AI Stage Analysis */}
-                    <div className="space-y-2">
-                      <h4 className="font-medium text-sm">AI Processing Stage Analysis</h4>
-                      <ProcessingStageIndicator 
-                        email={selectedItem.email}
-                        isInReviewQueue={true}
-                        showDetails={true}
-                      />
-                    </div>
-
-                    <Separator />
+                    {/* Notes (if any from AI analysis) */}
+                    {selectedItem.email.extractedData.notes && (
+                      <>
+                        <div className="space-y-2">
+                          <h4 className="font-medium text-sm">AI Analysis Notes</h4>
+                          <p className="text-xs text-muted-foreground bg-muted p-2 rounded">
+                            {selectedItem.email.extractedData.notes}
+                          </p>
+                        </div>
+                        <Separator />
+                      </>
+                    )}
 
                     {/* Email Content Full */}
                     <div className="space-y-2">

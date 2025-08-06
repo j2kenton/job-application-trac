@@ -30,10 +30,25 @@ interface AIAnalysisResult {
     contactEmail?: string;
     notes?: string;
   };
+  modelUsed?: 'gemini-2.5-flash' | 'gemini-2.5-pro';
+  processingTime?: number;
+}
+
+interface ModelConfig {
+  name: 'gemini-2.5-flash' | 'gemini-2.5-pro';
+  temperature: number;
+  topK: number;
+  topP: number;
+  maxOutputTokens: number;
 }
 
 class GoogleAIService {
   private apiKey: string | null;
+  private usageStats = {
+    flashCalls: 0,
+    proCalls: 0,
+    totalTokens: 0
+  };
 
   constructor() {
     this.apiKey = import.meta.env.VITE_GOOGLE_AI_API_KEY || null;
@@ -43,7 +58,68 @@ class GoogleAIService {
     return !!this.apiKey && this.apiKey !== 'your_google_ai_api_key_here';
   }
 
-  async analyzeEmail(subject: string, content: string, from: string): Promise<AIAnalysisResult> {
+  /**
+   * Determines which model to use based on email characteristics
+   */
+  private selectModel(subject: string, content: string, from: string, context?: {
+    initialConfidence?: number;
+    isInReviewQueue?: boolean;
+    hasComplexContent?: boolean;
+  }): ModelConfig {
+    const emailText = `${subject} ${content}`.toLowerCase();
+    
+    // Check for complex content indicators
+    const hasHebrewText = /[\u0590-\u05FF]/.test(emailText);
+    const hasComplexStructure = content.length > 2000 || content.split('\n').length > 20;
+    const hasMixedLanguages = hasHebrewText && /[a-zA-Z]/.test(emailText);
+    const hasForwardedContent = emailText.includes('forwarded') || emailText.includes('fwd:');
+    
+    const complexityIndicators = [
+      hasHebrewText,
+      hasComplexStructure,
+      hasMixedLanguages,
+      hasForwardedContent,
+      context?.hasComplexContent,
+      context?.isInReviewQueue
+    ].filter(Boolean).length;
+
+    // Use Pro model for medium confidence or complex content
+    const useProModel = 
+      (context?.initialConfidence !== undefined && 
+       context.initialConfidence >= 0.15 && 
+       context.initialConfidence <= 0.85) ||
+      complexityIndicators >= 2 ||
+      context?.isInReviewQueue;
+
+    if (useProModel) {
+      return {
+        name: 'gemini-2.5-pro',
+        temperature: 0.05,
+        topK: 1,
+        topP: 0.9,
+        maxOutputTokens: 2048
+      };
+    } else {
+      return {
+        name: 'gemini-2.5-flash',
+        temperature: 0.1,
+        topK: 1,
+        topP: 1,
+        maxOutputTokens: 1024
+      };
+    }
+  }
+
+  async analyzeEmail(
+    subject: string, 
+    content: string, 
+    from: string, 
+    context?: {
+      initialConfidence?: number;
+      isInReviewQueue?: boolean;
+      hasComplexContent?: boolean;
+    }
+  ): Promise<AIAnalysisResult> {
     if (!this.isConfigured()) {
       console.warn('Google AI not configured, skipping AI analysis');
       return {
@@ -53,10 +129,25 @@ class GoogleAIService {
       };
     }
 
+    const startTime = Date.now();
+
     try {
-      const prompt = this.buildAnalysisPrompt(subject, content, from);
+      // Select appropriate model based on content complexity
+      const modelConfig = this.selectModel(subject, content, from, context);
       
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${this.apiKey}`, {
+      // Build prompt (enhanced for Pro model if selected)
+      const prompt = this.buildAnalysisPrompt(subject, content, from, modelConfig.name === 'gemini-2.5-pro');
+      
+      // Log model selection for monitoring
+      console.log(`Using ${modelConfig.name} for email analysis`, {
+        subject: subject.substring(0, 50),
+        contentLength: content.length,
+        hasContext: !!context,
+        initialConfidence: context?.initialConfidence
+      });
+
+      // Make API call with selected model
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/${modelConfig.name}:generateContent?key=${this.apiKey}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,10 +159,10 @@ class GoogleAIService {
             }]
           }],
           generationConfig: {
-            temperature: 0.1,
-            topK: 1,
-            topP: 1,
-            maxOutputTokens: 1024,
+            temperature: modelConfig.temperature,
+            topK: modelConfig.topK,
+            topP: modelConfig.topP,
+            maxOutputTokens: modelConfig.maxOutputTokens,
           },
           safetySettings: [
             {
@@ -95,6 +186,11 @@ class GoogleAIService {
       });
 
       if (!response.ok) {
+        // Try fallback to Flash model if Pro fails
+        if (modelConfig.name === 'gemini-2.5-pro') {
+          console.warn(`Pro model failed, falling back to Flash for email: ${subject.substring(0, 50)}`);
+          return this.analyzeEmail(subject, content, from, { ...context, hasComplexContent: false });
+        }
         throw new Error(`Google AI API error: ${response.status} ${response.statusText}`);
       }
 
@@ -105,20 +201,38 @@ class GoogleAIService {
       }
 
       const responseText = data.candidates[0].content.parts[0].text;
-      return this.parseAIResponse(responseText);
+      const processingTime = Date.now() - startTime;
+      
+      // Update usage statistics
+      if (modelConfig.name === 'gemini-2.5-pro') {
+        this.usageStats.proCalls++;
+      } else {
+        this.usageStats.flashCalls++;
+      }
+      this.usageStats.totalTokens += this.estimateTokens(prompt + responseText);
+
+      const result = this.parseAIResponse(responseText);
+      
+      // Add metadata to result
+      result.modelUsed = modelConfig.name;
+      result.processingTime = processingTime;
+      
+      return result;
 
     } catch (error) {
       console.error('Error calling Google AI:', error);
       return {
         isJobRelated: false,
         confidence: 0,
-        reasoning: `AI analysis failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        reasoning: `AI analysis failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        modelUsed: 'gemini-2.5-flash', // Default fallback
+        processingTime: Date.now() - startTime
       };
     }
   }
 
-  private buildAnalysisPrompt(subject: string, content: string, from: string): string {
-    return `You are an expert email analyzer specialized in identifying job-related communications. Analyze the following email and determine if it's related to job applications, interviews, recruiting, or career opportunities.
+  private buildAnalysisPrompt(subject: string, content: string, from: string, useProModel: boolean = false): string {
+    const basePrompt = `You are an expert email analyzer specialized in identifying job-related communications. Analyze the following email and determine if it's related to job applications, interviews, recruiting, or career opportunities.
 
 IMPORTANT: Pay special attention to Hebrew text and job-related terms in both English and Hebrew.
 
@@ -164,10 +278,25 @@ Exclude these types of emails:
 - Newsletter subscriptions
 - Training/webinar invitations
 - General marketing emails
-- Job board notifications (unless from specific companies)
+- Job board notifications (LinkedIn, Indeed, Glassdoor, etc. unless from specific companies)
 - Career tips/advice emails (unless from a recruiter about a specific opportunity)
+- LinkedIn connection requests or generic LinkedIn messages
 
 Respond only with valid JSON, no additional text.`;
+
+    // Enhanced prompt for Pro model with additional reasoning instructions
+    if (useProModel) {
+      return basePrompt + `
+
+ENHANCED ANALYSIS (Pro Model):
+1. Apply deeper contextual understanding for ambiguous cases
+2. Consider cultural context for Hebrew job market communications
+3. Evaluate confidence with higher precision (use 0.1 increments)
+4. Provide more detailed reasoning for borderline cases
+5. Extract additional metadata when possible (salary, location, etc.)`;
+    }
+
+    return basePrompt;
   }
 
   private parseAIResponse(responseText: string): AIAnalysisResult {
@@ -200,6 +329,56 @@ Respond only with valid JSON, no additional text.`;
         reasoning: 'Failed to parse AI response'
       };
     }
+  }
+
+  /**
+   * Estimates token count for usage tracking
+   */
+  private estimateTokens(text: string): number {
+    // Rough estimation: ~4 characters per token for mixed English/Hebrew text
+    return Math.ceil(text.length / 4);
+  }
+
+  /**
+   * Gets current usage statistics
+   */
+  getUsageStats() {
+    return {
+      ...this.usageStats,
+      flashToProRatio: this.usageStats.flashCalls / Math.max(1, this.usageStats.proCalls),
+      totalCalls: this.usageStats.flashCalls + this.usageStats.proCalls,
+      estimatedCost: this.calculateEstimatedCost()
+    };
+  }
+
+  /**
+   * Calculates estimated cost based on usage
+   */
+  private calculateEstimatedCost(): { flash: number; pro: number; total: number } {
+    // Pricing per 1M tokens: Flash $0.35, Pro $7.00
+    const totalCalls = this.usageStats.flashCalls + this.usageStats.proCalls;
+    const flashTokens = this.usageStats.totalTokens * this.usageStats.flashCalls / Math.max(1, totalCalls);
+    const proTokens = this.usageStats.totalTokens * this.usageStats.proCalls / Math.max(1, totalCalls);
+    
+    const flashCost = flashTokens * 0.35 / 1000000;
+    const proCost = proTokens * 7.00 / 1000000;
+    
+    return {
+      flash: flashCost,
+      pro: proCost,
+      total: flashCost + proCost
+    };
+  }
+
+  /**
+   * Resets usage statistics
+   */
+  resetUsageStats() {
+    this.usageStats = {
+      flashCalls: 0,
+      proCalls: 0,
+      totalTokens: 0
+    };
   }
 }
 

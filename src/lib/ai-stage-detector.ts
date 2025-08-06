@@ -185,11 +185,16 @@ Respond with JSON format:
     `;
 
     try {
-      // Use the analyzeEmail method with a custom prompt structure
+      // Use the analyzeEmail method with context for hybrid model selection
       const result = await googleAI.analyzeEmail(
         `Stage Analysis: ${email.subject}`,
         prompt,
-        email.from
+        email.from,
+        {
+          initialConfidence: email.confidence,
+          isInReviewQueue: context.isInReviewQueue,
+          hasComplexContent: true // Stage analysis is always complex
+        }
       );
       
       // Transform the result to match our expected format
@@ -197,7 +202,9 @@ Respond with JSON format:
         currentStage: this.inferStageFromAIResult(result, email, context),
         reasoning: result.reasoning,
         suggestedNextAction: this.getSuggestedAction(result, email, context),
-        stageConfidence: result.confidence
+        stageConfidence: result.confidence,
+        modelUsed: result.modelUsed,
+        processingTime: result.processingTime
       };
     } catch (error) {
       console.error('Failed to get AI stage analysis:', error);
