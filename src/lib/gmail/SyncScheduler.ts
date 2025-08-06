@@ -269,7 +269,7 @@ class SyncScheduler {
       interviewer: '',
       jobUrl: processedEmail.extractedData.jobUrl || '',
       salary: processedEmail.extractedData.salary || '',
-      location: '',
+      location: processedEmail.extractedData.location || '',
       emailContent: processedEmail.content,
       createdAt: now,
       updatedAt: now

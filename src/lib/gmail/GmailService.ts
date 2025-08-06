@@ -40,6 +40,7 @@ export interface ProcessedEmail {
     contactEmail?: string;
     jobUrl?: string;
     salary?: string;
+    location?: string;
     notes?: string;
   };
 }
@@ -351,10 +352,47 @@ class GmailService {
         extractedData.contactEmail = emailMatch[1];
       }
 
-      // Extract URLs
-      const urlMatch = content.match(/(https?:\/\/[^\s]+)/);
-      if (urlMatch) {
-        extractedData.jobUrl = urlMatch[1];
+      // Extract URLs - distinguish between job URLs and meeting URLs
+      const urlMatches = content.match(/(https?:\/\/[^\s]+)/g);
+      if (urlMatches) {
+        // Look for video meeting URLs first
+        const meetingUrl = urlMatches.find(url => 
+          url.toLowerCase().includes('zoom') ||
+          url.toLowerCase().includes('teams') ||
+          url.toLowerCase().includes('meet.google') ||
+          url.toLowerCase().includes('webex') ||
+          url.toLowerCase().includes('gotomeeting') ||
+          url.toLowerCase().includes('skype')
+        );
+        
+        if (meetingUrl) {
+          extractedData.location = meetingUrl;
+        }
+        
+        // Set job URL to first non-meeting URL
+        const jobUrl = urlMatches.find(url => !meetingUrl || url !== meetingUrl);
+        if (jobUrl) {
+          extractedData.jobUrl = jobUrl;
+        }
+      }
+
+      // Extract physical location/address
+      if (!extractedData.location) {
+        // Look for address patterns
+        const addressPatterns = [
+          /(?:address|location|venue|office):?\s*(.+?)(?:\n|$)/i,
+          /(?:at|@)\s+([^,\n]+(?:street|st|avenue|ave|road|rd|drive|dr|boulevard|blvd)[^,\n]*)/i,
+          /(\d+\s+[^,\n]+(?:street|st|avenue|ave|road|rd|drive|dr|boulevard|blvd)[^,\n]*)/i,
+          /(?:located at|held at|visit us at):?\s*(.+?)(?:\n|$)/i
+        ];
+
+        for (const pattern of addressPatterns) {
+          const match = content.match(pattern);
+          if (match) {
+            extractedData.location = match[1]?.trim();
+            break;
+          }
+        }
       }
 
       // Set applied date to current date if this seems like an application confirmation
