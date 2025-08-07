@@ -29,20 +29,66 @@ class BrowserErrorMonitor {
   appendToLogFile(entry) {
     try {
       let logs = [];
+      
+      // Always start with a backup approach - atomic writes
+      const tempFile = this.logFile + '.tmp';
+      
       if (fs.existsSync(this.logFile)) {
-        const content = fs.readFileSync(this.logFile, 'utf8');
-        logs = JSON.parse(content);
+        try {
+          const content = fs.readFileSync(this.logFile, 'utf8').trim();
+          if (content) {
+            logs = JSON.parse(content);
+          }
+        } catch (parseError) {
+          // If JSON is corrupted, start fresh with empty array
+          console.warn('Log file corrupted, starting fresh');
+          logs = [];
+        }
       }
+      
+      // Ensure logs is an array
+      if (!Array.isArray(logs)) {
+        logs = [];
+      }
+      
       logs.push(entry);
       
-      // Keep only last 200 entries (more for browser errors)
-      if (logs.length > 200) {
-        logs = logs.slice(-200);
+      // Keep only last 100 entries to prevent file size issues
+      if (logs.length > 100) {
+        logs = logs.slice(-100);
       }
       
-      fs.writeFileSync(this.logFile, JSON.stringify(logs, null, 2));
+      // Use atomic write pattern: write to temp file, then rename
+      const jsonContent = JSON.stringify(logs, null, 2);
+      fs.writeFileSync(tempFile, jsonContent, 'utf8');
+      
+      // Atomic rename (prevents corruption)
+      if (fs.existsSync(tempFile)) {
+        fs.renameSync(tempFile, this.logFile);
+      }
+      
     } catch (error) {
       console.error('Failed to write to log file:', error);
+      // Emergency fallback - create minimal fresh log
+      try {
+        const simpleLog = JSON.stringify([{
+          timestamp: new Date().toISOString(),
+          level: 'error',
+          source: 'monitor',
+          message: 'Log system recovered from error'
+        }], null, 2);
+        fs.writeFileSync(this.logFile, simpleLog, 'utf8');
+      } catch (writeError) {
+        console.error('Failed to create fresh log file:', writeError);
+        // Clear the corrupted file as last resort
+        try {
+          if (fs.existsSync(this.logFile)) {
+            fs.unlinkSync(this.logFile);
+          }
+        } catch (unlinkError) {
+          console.error('Failed to clear corrupted log file:', unlinkError);
+        }
+      }
     }
   }
 
@@ -351,6 +397,11 @@ class BrowserErrorMonitor {
         arg.value || arg.description || '[Object]'
       ).join(' ');
       
+      // Filter out DevTools project settings errors (harmless noise)
+      if (consoleMessage && consoleMessage.includes('Could not load project settings')) {
+        return; // Skip logging this harmless DevTools error
+      }
+      
       this.log(`Console ${type}: ${consoleMessage}`, type === 'error' ? 'error' : 'info', 'browser');
       
       if (type === 'error') {
@@ -386,6 +437,12 @@ class BrowserErrorMonitor {
     // Handle Console domain messages
     if (message.method === 'Console.messageAdded') {
       const { message: consoleMsg } = message.params;
+      
+      // Filter out DevTools project settings errors (harmless noise)
+      if (consoleMsg.text && consoleMsg.text.includes('Could not load project settings')) {
+        return; // Skip logging this harmless DevTools error
+      }
+      
       this.log(`Console message: ${consoleMsg.level} - ${consoleMsg.text}`, consoleMsg.level === 'error' ? 'error' : 'info', 'browser');
       
       if (consoleMsg.level === 'error') {

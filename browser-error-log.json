@@ -1,1203 +1,536 @@
 [
   {
-    "timestamp": "2025-08-07T11:08:41.913Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console timeEnd: Main._createAppUI: 12.029052734375 ms"
+    "timestamp": "2025-08-07T22:21:00.558Z",
+    "level": "error",
+    "source": "monitor",
+    "message": "Log system recovered from error"
   },
   {
-    "timestamp": "2025-08-07T11:08:41.916Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.919Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console timeEnd: Main._showAppUI: 140.76904296875 ms"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.922Z",
+    "timestamp": "2025-08-07T22:21:00.561Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:08:41.924Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console timeEnd: Main._initializeTarget: 33.775146484375 ms"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.927Z",
+    "timestamp": "2025-08-07T22:21:00.569Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:08:41.930Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.934Z",
+    "timestamp": "2025-08-07T22:21:00.577Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:08:41.936Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console timeEnd: Main._lateInitialization: 0.31787109375 ms"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.939Z",
+    "timestamp": "2025-08-07T22:21:00.623Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:08:41.941Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.944Z",
+    "timestamp": "2025-08-07T22:21:00.632Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:08:41.948Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.952Z",
+    "timestamp": "2025-08-07T22:21:00.641Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:08:41.978Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.981Z",
+    "timestamp": "2025-08-07T22:21:00.650Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:08:41.986Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.993Z",
+    "timestamp": "2025-08-07T22:21:00.660Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:08:41.996Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:42.001Z",
+    "timestamp": "2025-08-07T22:21:00.669Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.008Z",
+    "timestamp": "2025-08-07T22:21:00.682Z",
     "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
+    "source": "browser-debug",
+    "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.014Z",
+    "timestamp": "2025-08-07T22:21:00.694Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Runtime.consoleAPICalled"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:00.703Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Runtime.consoleAPICalled"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:00.712Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Runtime.consoleAPICalled"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:00.722Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Runtime.consoleAPICalled"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:00.778Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: unknown"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.016Z",
+    "timestamp": "2025-08-07T22:21:00.795Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools command response: {\"id\":1,\"result\":{}}"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.023Z",
+    "timestamp": "2025-08-07T22:21:00.813Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: unknown"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.030Z",
+    "timestamp": "2025-08-07T22:21:00.831Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools command response: {\"id\":2,\"result\":{}}"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.035Z",
+    "timestamp": "2025-08-07T22:21:00.851Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: unknown"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.040Z",
+    "timestamp": "2025-08-07T22:21:00.867Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools command response: {\"id\":3,\"result\":{}}"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.051Z",
+    "timestamp": "2025-08-07T22:21:00.885Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.059Z",
+    "timestamp": "2025-08-07T22:21:00.901Z",
     "level": "info",
     "source": "browser",
-    "message": "Console message: debug - Main._createAppUI: 12.029052734375 ms"
+    "message": "Console message: debug - Main._createAppUI: 12.744140625 ms"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.075Z",
+    "timestamp": "2025-08-07T22:21:00.917Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.078Z",
+    "timestamp": "2025-08-07T22:21:00.932Z",
     "level": "info",
     "source": "browser",
-    "message": "Console message: debug - Main._showAppUI: 140.76904296875 ms"
+    "message": "Console message: debug - Main._showAppUI: 127.652099609375 ms"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.084Z",
+    "timestamp": "2025-08-07T22:21:00.950Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.091Z",
+    "timestamp": "2025-08-07T22:21:00.969Z",
     "level": "info",
     "source": "browser",
-    "message": "Console message: debug - Main._initializeTarget: 33.775146484375 ms"
+    "message": "Console message: debug - Main._initializeTarget: 33.482177734375 ms"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.103Z",
+    "timestamp": "2025-08-07T22:21:00.990Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.107Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:42.111Z",
+    "timestamp": "2025-08-07T22:21:01.010Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.115Z",
+    "timestamp": "2025-08-07T22:21:01.020Z",
     "level": "info",
     "source": "browser",
-    "message": "Console message: debug - Main._lateInitialization: 0.31787109375 ms"
+    "message": "Console message: debug - Main._lateInitialization: 0.255126953125 ms"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.119Z",
+    "timestamp": "2025-08-07T22:21:01.028Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.122Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:42.125Z",
+    "timestamp": "2025-08-07T22:21:01.036Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.127Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:42.129Z",
+    "timestamp": "2025-08-07T22:21:01.043Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.131Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:42.134Z",
+    "timestamp": "2025-08-07T22:21:01.051Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.136Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:42.139Z",
+    "timestamp": "2025-08-07T22:21:01.059Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.141Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:42.143Z",
+    "timestamp": "2025-08-07T22:21:01.069Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.145Z",
+    "timestamp": "2025-08-07T22:21:01.076Z",
     "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.147Z",
+    "timestamp": "2025-08-07T22:21:01.084Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.091Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.097Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.103Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.110Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.117Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.124Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.132Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.139Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.146Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.152Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.159Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.165Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.172Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.179Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.186Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.193Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T22:21:01.200Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: unknown"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.150Z",
+    "timestamp": "2025-08-07T22:21:01.207Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools command response: {\"id\":4,\"result\":{}}"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.152Z",
+    "timestamp": "2025-08-07T22:21:01.213Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: unknown"
   },
   {
-    "timestamp": "2025-08-07T11:08:42.155Z",
+    "timestamp": "2025-08-07T22:21:01.221Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools command response: {\"id\":5,\"result\":{}}"
   },
   {
-    "timestamp": "2025-08-07T11:08:43.724Z",
+    "timestamp": "2025-08-07T22:35:20.779Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:43.727Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:43.730Z",
+    "timestamp": "2025-08-07T22:35:20.786Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:08:43.732Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:46.738Z",
+    "timestamp": "2025-08-07T22:35:33.093Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:08:46.741Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:46.744Z",
+    "timestamp": "2025-08-07T22:35:33.099Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:08:46.746Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:11:54.542Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: sadf"
-  },
-  {
-    "timestamp": "2025-08-07T11:11:54.546Z",
-    "level": "info",
-    "source": "autofix",
-    "message": "Attempting auto-fix for BROWSER_RUNTIME_ERROR (attempt 1)"
-  },
-  {
-    "timestamp": "2025-08-07T11:11:54.547Z",
-    "level": "warn",
-    "source": "autofix",
-    "message": "No auto-fix available for error type: BROWSER_RUNTIME_ERROR"
-  },
-  {
-    "timestamp": "2025-08-07T11:11:54.898Z",
+    "timestamp": "2025-08-07T22:39:26.956Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:11:54.901Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:11:54.913Z",
+    "timestamp": "2025-08-07T22:39:26.960Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:11:54.916Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:11:57.834Z",
+    "timestamp": "2025-08-07T22:39:34.499Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:11:57.838Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:11:57.845Z",
+    "timestamp": "2025-08-07T22:39:34.504Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:11:57.847Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:12:00.538Z",
+    "timestamp": "2025-08-07T22:42:43.936Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:12:00.544Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:12:00.548Z",
+    "timestamp": "2025-08-07T22:42:43.941Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:12:00.550Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:12:03.677Z",
+    "timestamp": "2025-08-07T22:42:44.749Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:12:03.679Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:12:03.682Z",
+    "timestamp": "2025-08-07T22:42:44.756Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:12:03.684Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:12:06.352Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: sadf"
-  },
-  {
-    "timestamp": "2025-08-07T11:12:06.354Z",
-    "level": "info",
-    "source": "autofix",
-    "message": "Attempting auto-fix for BROWSER_RUNTIME_ERROR (attempt 2)"
-  },
-  {
-    "timestamp": "2025-08-07T11:12:06.357Z",
-    "level": "warn",
-    "source": "autofix",
-    "message": "No auto-fix available for error type: BROWSER_RUNTIME_ERROR"
-  },
-  {
-    "timestamp": "2025-08-07T11:12:06.500Z",
+    "timestamp": "2025-08-07T22:42:45.542Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:12:06.502Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:12:06.504Z",
+    "timestamp": "2025-08-07T22:42:45.549Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:12:06.505Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:12:08.852Z",
+    "timestamp": "2025-08-07T22:42:48.097Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:12:08.855Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:12:08.859Z",
+    "timestamp": "2025-08-07T22:42:48.104Z",
     "level": "info",
     "source": "browser-debug",
     "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:12:08.862Z",
+    "timestamp": "2025-08-07T23:15:26.260Z",
     "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
   },
   {
-    "timestamp": "2025-08-07T11:13:33.072Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: LinkedIn authentication failed: OAuth state validation failed - possible CSRF attack or stale request"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:33.077Z",
+    "timestamp": "2025-08-07T23:15:26.271Z",
     "level": "info",
-    "source": "autofix",
-    "message": "Attempting auto-fix for BROWSER_API_ERROR (attempt 1)"
+    "source": "browser-debug",
+    "message": "DevTools message received: Runtime.consoleAPICalled"
   },
   {
-    "timestamp": "2025-08-07T11:13:33.080Z",
+    "timestamp": "2025-08-07T23:19:38.494Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T23:19:38.500Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Runtime.consoleAPICalled"
+  },
+  {
+    "timestamp": "2025-08-07T23:19:50.517Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Inspector.detached"
+  },
+  {
+    "timestamp": "2025-08-07T23:19:50.527Z",
     "level": "warn",
     "source": "browser",
-    "message": "API error detected: LinkedIn authentication failed: OAuth state validation failed - possible CSRF attack or stale request"
+    "message": "Disconnected from Chrome DevTools Protocol"
   },
   {
-    "timestamp": "2025-08-07T11:13:33.182Z",
+    "timestamp": "2025-08-07T23:19:55.554Z",
+    "level": "info",
+    "source": "browser",
+    "message": "Attempting to connect to Chrome DevTools..."
+  },
+  {
+    "timestamp": "2025-08-07T23:19:55.583Z",
     "level": "error",
     "source": "browser",
-    "message": "Console error: Token exchange error: TypeError: Failed to fetch\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:299:36)\n    at LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:46)\n    at http://localhost:5173/src/lib/linkedin/LinkedInService.ts:206:34"
+    "message": "Failed to connect to browser: request to http://localhost:9222/json failed, reason: "
   },
   {
-    "timestamp": "2025-08-07T11:13:33.204Z",
-    "level": "info",
-    "source": "autofix",
-    "message": "Attempting auto-fix for BROWSER_NETWORK_ERROR (attempt 1)"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:33.213Z",
-    "level": "warn",
-    "source": "browser",
-    "message": "Browser network error detected: Token exchange error: TypeError: Failed to fetch\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:299:36)\n    at LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:46)\n    at http://localhost:5173/src/lib/linkedin/LinkedInService.ts:206:34"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:33.219Z",
+    "timestamp": "2025-08-07T23:19:55.598Z",
     "level": "info",
     "source": "browser",
-    "message": "Local server connection issue detected"
+    "message": "Make sure Chrome is running with --remote-debugging-port=9222"
   },
   {
-    "timestamp": "2025-08-07T11:13:33.224Z",
+    "timestamp": "2025-08-07T23:20:05.626Z",
     "level": "info",
-    "source": "server-check",
-    "message": "Checking local development servers..."
+    "source": "browser",
+    "message": "Attempting to connect to Chrome DevTools..."
   },
   {
-    "timestamp": "2025-08-07T11:13:33.248Z",
+    "timestamp": "2025-08-07T23:20:05.648Z",
     "level": "error",
     "source": "browser",
-    "message": "Console error: LinkedIn connection error: Error: Could not connect to LinkedIn backend service. Make sure the backend is running on http://localhost:3001\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:329:23)\n    at async LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:35)"
+    "message": "Failed to connect to browser: request to http://localhost:9222/json failed, reason: "
   },
   {
-    "timestamp": "2025-08-07T11:13:33.251Z",
-    "level": "info",
-    "source": "autofix",
-    "message": "Attempting auto-fix for BROWSER_API_ERROR (attempt 1)"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:33.254Z",
-    "level": "warn",
-    "source": "browser",
-    "message": "API error detected: LinkedIn connection error: Error: Could not connect to LinkedIn backend service. Make sure the backend is running on http://localhost:3001\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:329:23)\n    at async LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:35)"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:33.256Z",
+    "timestamp": "2025-08-07T23:20:05.662Z",
     "level": "info",
     "source": "browser",
-    "message": "LinkedIn API error - checking service configuration"
+    "message": "Make sure Chrome is running with --remote-debugging-port=9222"
   },
   {
-    "timestamp": "2025-08-07T11:13:33.260Z",
-    "level": "info",
-    "source": "service-check",
-    "message": "LinkedIn service check - verify environment variables and authentication"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:33.299Z",
-    "level": "info",
-    "source": "server-check",
-    "message": "Main dev server (port 5173) is running"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:33.369Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Console.messageAdded"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:33.372Z",
+    "timestamp": "2025-08-07T23:20:15.679Z",
     "level": "info",
     "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
+    "message": "Attempting to connect to Chrome DevTools..."
   },
   {
-    "timestamp": "2025-08-07T11:13:33.375Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:33.377Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:36.727Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Console.messageAdded"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:36.730Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:36.733Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:36.735Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:46.911Z",
+    "timestamp": "2025-08-07T23:20:15.690Z",
     "level": "error",
     "source": "browser",
-    "message": "Console error: LinkedIn authentication failed: OAuth state validation failed - possible CSRF attack or stale request"
+    "message": "Failed to connect to browser: request to http://localhost:9222/json failed, reason: "
   },
   {
-    "timestamp": "2025-08-07T11:13:46.916Z",
-    "level": "info",
-    "source": "autofix",
-    "message": "Attempting auto-fix for BROWSER_API_ERROR (attempt 2)"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:46.920Z",
-    "level": "warn",
-    "source": "browser",
-    "message": "API error detected: LinkedIn authentication failed: OAuth state validation failed - possible CSRF attack or stale request"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:46.996Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: Token exchange error: TypeError: Failed to fetch\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:299:36)\n    at LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:46)\n    at http://localhost:5173/src/lib/linkedin/LinkedInService.ts:206:34"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:46.999Z",
-    "level": "info",
-    "source": "autofix",
-    "message": "Attempting auto-fix for BROWSER_NETWORK_ERROR (attempt 2)"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:47.003Z",
-    "level": "warn",
-    "source": "browser",
-    "message": "Browser network error detected: Token exchange error: TypeError: Failed to fetch\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:299:36)\n    at LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:46)\n    at http://localhost:5173/src/lib/linkedin/LinkedInService.ts:206:34"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:47.006Z",
+    "timestamp": "2025-08-07T23:20:15.697Z",
     "level": "info",
     "source": "browser",
-    "message": "Local server connection issue detected"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:47.009Z",
-    "level": "info",
-    "source": "server-check",
-    "message": "Checking local development servers..."
-  },
-  {
-    "timestamp": "2025-08-07T11:13:47.025Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: LinkedIn connection error: Error: Could not connect to LinkedIn backend service. Make sure the backend is running on http://localhost:3001\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:329:23)\n    at async LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:35)"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:47.030Z",
-    "level": "info",
-    "source": "autofix",
-    "message": "Attempting auto-fix for BROWSER_API_ERROR (attempt 2)"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:47.035Z",
-    "level": "warn",
-    "source": "browser",
-    "message": "API error detected: LinkedIn connection error: Error: Could not connect to LinkedIn backend service. Make sure the backend is running on http://localhost:3001\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:329:23)\n    at async LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:35)"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:47.039Z",
-    "level": "info",
-    "source": "browser",
-    "message": "LinkedIn API error - checking service configuration"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:47.042Z",
-    "level": "info",
-    "source": "service-check",
-    "message": "LinkedIn service check - verify environment variables and authentication"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:47.094Z",
-    "level": "info",
-    "source": "server-check",
-    "message": "Main dev server (port 5173) is running"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:47.195Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Console.messageAdded"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:47.198Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:47.200Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:47.202Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:50.732Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Console.messageAdded"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:50.735Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:50.737Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:50.738Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.267Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: LinkedIn authentication failed: OAuth state validation failed - possible CSRF attack or stale request"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.272Z",
-    "level": "info",
-    "source": "autofix",
-    "message": "Attempting auto-fix for BROWSER_API_ERROR (attempt 3)"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.276Z",
-    "level": "warn",
-    "source": "browser",
-    "message": "API error detected: LinkedIn authentication failed: OAuth state validation failed - possible CSRF attack or stale request"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.364Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: Token exchange error: TypeError: Failed to fetch\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:299:36)\n    at LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:46)\n    at http://localhost:5173/src/lib/linkedin/LinkedInService.ts:206:34"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.396Z",
-    "level": "info",
-    "source": "autofix",
-    "message": "Attempting auto-fix for BROWSER_NETWORK_ERROR (attempt 3)"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.398Z",
-    "level": "warn",
-    "source": "browser",
-    "message": "Browser network error detected: Token exchange error: TypeError: Failed to fetch\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:299:36)\n    at LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:46)\n    at http://localhost:5173/src/lib/linkedin/LinkedInService.ts:206:34"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.403Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Local server connection issue detected"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.407Z",
-    "level": "info",
-    "source": "server-check",
-    "message": "Checking local development servers..."
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.417Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: LinkedIn connection error: Error: Could not connect to LinkedIn backend service. Make sure the backend is running on http://localhost:3001\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:329:23)\n    at async LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:35)"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.420Z",
-    "level": "info",
-    "source": "autofix",
-    "message": "Attempting auto-fix for BROWSER_API_ERROR (attempt 3)"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.425Z",
-    "level": "warn",
-    "source": "browser",
-    "message": "API error detected: LinkedIn connection error: Error: Could not connect to LinkedIn backend service. Make sure the backend is running on http://localhost:3001\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:329:23)\n    at async LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:35)"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.427Z",
-    "level": "info",
-    "source": "browser",
-    "message": "LinkedIn API error - checking service configuration"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.430Z",
-    "level": "info",
-    "source": "service-check",
-    "message": "LinkedIn service check - verify environment variables and authentication"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.479Z",
-    "level": "info",
-    "source": "server-check",
-    "message": "Main dev server (port 5173) is running"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.545Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Console.messageAdded"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.547Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.549Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:13:59.550Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:02.367Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Console.messageAdded"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:02.372Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:02.377Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:02.379Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:11.252Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: LinkedIn authentication failed: OAuth state validation failed - possible CSRF attack or stale request"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:11.255Z",
-    "level": "warn",
-    "source": "autofix",
-    "message": "Max fix attempts reached for: browser:BROWSER_API_ERROR:LinkedIn authentication failed: OAuth state validation failed - possible CSRF attack or stale reques"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:11.343Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: Token exchange error: TypeError: Failed to fetch\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:299:36)\n    at LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:46)\n    at http://localhost:5173/src/lib/linkedin/LinkedInService.ts:206:34"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:11.369Z",
-    "level": "warn",
-    "source": "autofix",
-    "message": "Max fix attempts reached for: browser:BROWSER_NETWORK_ERROR:Token exchange error: TypeError: Failed to fetch\n    at LinkedInService.exchangeCodeForToken (http:/"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:11.374Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: LinkedIn connection error: Error: Could not connect to LinkedIn backend service. Make sure the backend is running on http://localhost:3001\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:329:23)\n    at async LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:35)"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:11.379Z",
-    "level": "warn",
-    "source": "autofix",
-    "message": "Max fix attempts reached for: browser:BROWSER_API_ERROR:LinkedIn connection error: Error: Could not connect to LinkedIn backend service. Make sure the backe"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:11.482Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Console.messageAdded"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:11.484Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:11.486Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:11.488Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:20.812Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: LinkedIn authentication failed: OAuth state validation failed - possible CSRF attack or stale request"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:20.818Z",
-    "level": "warn",
-    "source": "autofix",
-    "message": "Max fix attempts reached for: browser:BROWSER_API_ERROR:LinkedIn authentication failed: OAuth state validation failed - possible CSRF attack or stale reques"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:20.940Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: Token exchange error: TypeError: Failed to fetch\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:299:36)\n    at LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:46)\n    at http://localhost:5173/src/lib/linkedin/LinkedInService.ts:206:34"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:20.945Z",
-    "level": "warn",
-    "source": "autofix",
-    "message": "Max fix attempts reached for: browser:BROWSER_NETWORK_ERROR:Token exchange error: TypeError: Failed to fetch\n    at LinkedInService.exchangeCodeForToken (http:/"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:20.949Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: LinkedIn connection error: Error: Could not connect to LinkedIn backend service. Make sure the backend is running on http://localhost:3001\n    at LinkedInService.exchangeCodeForToken (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:329:23)\n    at async LinkedInService.handleCallback (http://localhost:5173/src/lib/linkedin/LinkedInService.ts:269:35)"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:20.954Z",
-    "level": "warn",
-    "source": "autofix",
-    "message": "Max fix attempts reached for: browser:BROWSER_API_ERROR:LinkedIn connection error: Error: Could not connect to LinkedIn backend service. Make sure the backe"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:21.189Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Console.messageAdded"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:21.191Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:21.194Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:21.224Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:24.809Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Console.messageAdded"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:24.812Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:24.813Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:14:24.814Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:19:01.815Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Console.messageAdded"
-  },
-  {
-    "timestamp": "2025-08-07T11:19:01.819Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:19:01.823Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:19:01.826Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:19:05.435Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Console.messageAdded"
-  },
-  {
-    "timestamp": "2025-08-07T11:19:05.438Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:19:05.440Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:19:05.443Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:19:58.809Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Console.messageAdded"
-  },
-  {
-    "timestamp": "2025-08-07T11:19:58.814Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:19:58.818Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:19:58.823Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:20:10.819Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Console.messageAdded"
-  },
-  {
-    "timestamp": "2025-08-07T11:20:10.822Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:20:10.827Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
-    "timestamp": "2025-08-07T11:20:10.830Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
-  },
-  {
-    "timestamp": "2025-08-07T11:20:13.969Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console error: Request Storage.getStorageKeyForFrame failed. {\"code\":-32602,\"message\":\"Frame tree node for given frame not found\"}"
-  },
-  {
-    "timestamp": "2025-08-07T11:20:13.970Z",
-    "level": "error",
-    "source": "browser",
-    "message": "Console message: error - Request Storage.getStorageKeyForFrame failed. {\"code\":-32602,\"message\":\"Frame tree node for given frame not found\"}"
-  },
-  {
-    "timestamp": "2025-08-07T11:20:13.974Z",
-    "level": "info",
-    "source": "autofix",
-    "message": "Attempting auto-fix for BROWSER_RUNTIME_ERROR (attempt 1)"
+    "message": "Make sure Chrome is running with --remote-debugging-port=9222"
   }
-]
 ]

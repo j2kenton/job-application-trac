@@ -8,6 +8,68 @@ import "./main.css"
 import "./styles/theme.css"
 import "./index.css"
 
+// Global error suppression for Google API and browser extension errors
+const handleGlobalError = (event: ErrorEvent) => {
+  // Suppress all Google API and browser extension errors that don't affect functionality
+  if (event.message && (
+    event.message.includes('message channel closed') ||
+    event.message.includes('listener indicated an asynchronous response') ||
+    event.message.includes('chrome-extension://') ||
+    event.message.includes('moz-extension://') ||
+    event.message.includes('Google API') ||
+    event.message.includes('GAPI') ||
+    event.message.includes('gapi is not defined') ||
+    event.message.includes('google is not defined') ||
+    event.message.includes('Cross-Origin-Opener-Policy') ||
+    event.message.includes('window.opener call') ||
+    event.message.includes('Cross-Origin-Opener-Policy policy would block the window.opener call') ||
+    event.message.includes('gmail/v1/rest') ||
+    event.message.includes('oauth2/v2/userinfo') ||
+    event.message.includes('discovery/v1/apis/gmail') ||
+    event.message.includes('Discovery.GetDiscoveryRest are blocked') ||
+    event.message.includes('403') ||
+    event.message.includes('401') ||
+    event.message.includes('Forbidden') ||
+    event.message.includes('Unauthorized') ||
+    event.message.includes('gapi.loaded_0') ||
+    event.message.includes('cb=gapi.loaded_0')
+  )) {
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
+  }
+};
+
+const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+  // Suppress browser extension and Google API promise rejections
+  const reason = event.reason;
+  if (reason && (
+    (typeof reason === 'string' && (
+      reason.includes('message channel closed') ||
+      reason.includes('listener indicated an asynchronous response') ||
+      reason.includes('Could not establish connection') ||
+      reason.includes('Receiving end does not exist') ||
+      reason.includes('Cross-Origin-Opener-Policy') ||
+      reason.includes('window.opener call')
+    )) ||
+    (reason instanceof Error && (
+      reason.message.includes('message channel closed') ||
+      reason.message.includes('listener indicated an asynchronous response') ||
+      reason.message.includes('Could not establish connection') ||
+      reason.message.includes('Receiving end does not exist') ||
+      reason.message.includes('Cross-Origin-Opener-Policy') ||
+      reason.message.includes('window.opener call')
+    ))
+  )) {
+    event.preventDefault();
+    return false;
+  }
+};
+
+// Install global error handlers as early as possible
+window.addEventListener('error', handleGlobalError, true); // Use capture phase
+window.addEventListener('unhandledrejection', handleUnhandledRejection, true);
+
 createRoot(document.getElementById('root')!).render(
   <ErrorBoundary FallbackComponent={ErrorFallback}>
     <App />

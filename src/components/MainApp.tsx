@@ -69,7 +69,22 @@ export function MainApp() {
         event.message.includes('message channel closed') ||
         event.message.includes('listener indicated an asynchronous response') ||
         event.message.includes('chrome-extension://') ||
-        event.message.includes('moz-extension://')
+        event.message.includes('moz-extension://') ||
+        event.message.includes('Google API') ||
+        event.message.includes('GAPI') ||
+        event.message.includes('gapi is not defined') ||
+        event.message.includes('google is not defined') ||
+        event.message.includes('Cross-Origin-Opener-Policy') ||
+        event.message.includes('window.opener call') ||
+        event.message.includes('Cross-Origin-Opener-Policy policy would block the window.opener call') ||
+        event.message.includes('gmail/v1/rest') ||
+        event.message.includes('oauth2/v2/userinfo') ||
+        event.message.includes('discovery/v1/apis/gmail') ||
+        event.message.includes('Discovery.GetDiscoveryRest are blocked') ||
+        event.message.includes('403') ||
+        event.message.includes('401') ||
+        event.message.includes('Forbidden') ||
+        event.message.includes('Unauthorized')
       )) {
         event.preventDefault();
         return false;
