@@ -4,13 +4,20 @@ This document describes the automatic error monitoring and fixing system for the
 
 ## Overview
 
-The error monitoring system continuously watches for console errors, build errors, and runtime issues, then attempts to automatically fix common problems.
+The error monitoring system continuously watches for console errors, build errors, and runtime issues, then attempts to automatically fix common problems. Now includes **real-time browser console monitoring** with Chrome DevTools Protocol integration.
 
 ## Files
 
-- `scripts/error-monitor.js` - Main error monitoring script
-- `start-error-monitor.bat` - Windows batch file to start monitoring
+### Basic Error Monitor
+- `scripts/error-monitor.js` - Basic error monitoring script (build-time only)
+- `start-error-monitor.bat` - Windows batch file to start basic monitoring
 - `error-log.json` - Log file with error history (created automatically)
+
+### Enhanced Browser Monitor (NEW)
+- `scripts/browser-error-monitor.js` - Enhanced script with browser console integration
+- `start-browser-monitor.bat` - Windows batch file to start enhanced monitoring
+- `start-chrome-debug.bat` - Starts Chrome with debugging enabled
+- `browser-error-log.json` - Enhanced log file with browser and build errors
 
 ## Features
 
@@ -36,7 +43,7 @@ The error monitoring system continuously watches for console errors, build error
 
 ## Usage
 
-### Start Monitoring
+### Basic Error Monitoring (Build-time only)
 ```bash
 # Option 1: Run batch file
 start-error-monitor.bat
@@ -44,6 +51,35 @@ start-error-monitor.bat
 # Option 2: Run directly with Node.js
 node scripts/error-monitor.js
 ```
+
+### Enhanced Browser Monitoring (Real-time console errors)
+```bash
+# Step 1: Start Chrome with debugging enabled
+start-chrome-debug.bat
+
+# Step 2: Start the enhanced monitor
+start-browser-monitor.bat
+
+# Or run directly with Node.js
+node scripts/browser-error-monitor.js
+```
+
+### Browser Monitoring Features
+- **Real-time Console Error Capture**: Connects to Chrome DevTools Protocol
+- **Automatic Error Classification**: Categorizes browser vs build errors
+- **Enhanced Auto-fixes**: Browser-specific error handling
+- **Network Error Detection**: Monitors fetch failures and CORS issues
+- **API Error Tracking**: Specialized LinkedIn/Gmail error handling
+- **Development Server Monitoring**: Tracks build process alongside browser errors
+
+### Setup for Browser Monitoring
+1. **Install Dependencies**: `npm install ws node-fetch` (already installed)
+2. **Start Chrome with Debugging**: Run `start-chrome-debug.bat` or manually:
+   ```bash
+   chrome.exe --remote-debugging-port=9222 --disable-web-security --user-data-dir="%TEMP%\chrome-debug"
+   ```
+3. **Start Enhanced Monitor**: Run `start-browser-monitor.bat`
+4. **Monitor Logs**: Check `browser-error-log.json` for detailed error tracking
 
 ### Current Application Status
 ✅ **LinkedIn Sync Status Integration**: Successfully completed
