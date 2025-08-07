@@ -301,43 +301,65 @@ class BrowserErrorMonitor {
   enableRuntimeEvents() {
     if (!this.wsConnection) return;
     
+    this.log('Enabling runtime events for console monitoring...', 'info', 'browser');
+    
     // Enable Runtime domain to receive console events
     this.wsConnection.send(JSON.stringify({
       id: 1,
       method: 'Runtime.enable'
     }));
     
-    // Enable console API events
+    // Enable Log domain for console messages
     this.wsConnection.send(JSON.stringify({
       id: 2,
-      method: 'Runtime.consoleAPICalled'
+      method: 'Log.enable'
     }));
     
-    // Enable exception events
+    // Enable console API called events
     this.wsConnection.send(JSON.stringify({
       id: 3,
-      method: 'Runtime.exceptionThrown'
+      method: 'Runtime.setAsyncCallStackDepth',
+      params: { maxDepth: 32 }
     }));
+    
+    // Enable Console domain
+    this.wsConnection.send(JSON.stringify({
+      id: 4,
+      method: 'Console.enable'
+    }));
+    
+    // Subscribe to all Runtime notifications
+    this.wsConnection.send(JSON.stringify({
+      id: 5,
+      method: 'Runtime.addBinding',
+      params: { name: 'errorMonitor' }
+    }));
+    
+    this.log('Runtime events enabled - now monitoring for console errors', 'success', 'browser');
   }
 
   handleBrowserMessage(message) {
+    // Log ALL incoming messages for debugging
+    this.log(`DevTools message received: ${message.method || 'unknown'}`, 'info', 'browser-debug');
+    
+    // Handle console API calls (console.log, console.error, etc.)
     if (message.method === 'Runtime.consoleAPICalled') {
       const { type, args, timestamp } = message.params;
       
-      if (type === 'error' || type === 'warning') {
-        const errorMessage = args.map(arg => 
-          arg.value || arg.description || '[Object]'
-        ).join(' ');
-        
-        this.log(`Console ${type}: ${errorMessage}`, type === 'error' ? 'error' : 'warn', 'browser');
-        
-        if (type === 'error') {
-          const errorType = this.identifyErrorType(errorMessage, 'browser');
-          this.autoFix(errorMessage, errorType, 'browser');
-        }
+      // Log ALL console messages, not just errors
+      const consoleMessage = args.map(arg => 
+        arg.value || arg.description || '[Object]'
+      ).join(' ');
+      
+      this.log(`Console ${type}: ${consoleMessage}`, type === 'error' ? 'error' : 'info', 'browser');
+      
+      if (type === 'error') {
+        const errorType = this.identifyErrorType(consoleMessage, 'browser');
+        this.autoFix(consoleMessage, errorType, 'browser');
       }
     }
     
+    // Handle runtime exceptions (uncaught errors)
     if (message.method === 'Runtime.exceptionThrown') {
       const { exceptionDetails } = message.params;
       const errorMessage = exceptionDetails.exception?.description || 
@@ -348,6 +370,33 @@ class BrowserErrorMonitor {
       
       const errorType = this.identifyErrorType(errorMessage, 'browser');
       this.autoFix(errorMessage, errorType, 'browser');
+    }
+    
+    // Handle Log domain entries (browser console messages)
+    if (message.method === 'Log.entryAdded') {
+      const { entry } = message.params;
+      this.log(`Log entry: ${entry.level} - ${entry.text}`, entry.level === 'error' ? 'error' : 'info', 'browser');
+      
+      if (entry.level === 'error') {
+        const errorType = this.identifyErrorType(entry.text, 'browser');
+        this.autoFix(entry.text, errorType, 'browser');
+      }
+    }
+    
+    // Handle Console domain messages
+    if (message.method === 'Console.messageAdded') {
+      const { message: consoleMsg } = message.params;
+      this.log(`Console message: ${consoleMsg.level} - ${consoleMsg.text}`, consoleMsg.level === 'error' ? 'error' : 'info', 'browser');
+      
+      if (consoleMsg.level === 'error') {
+        const errorType = this.identifyErrorType(consoleMsg.text, 'browser');
+        this.autoFix(consoleMsg.text, errorType, 'browser');
+      }
+    }
+    
+    // Log any response messages for debugging
+    if (message.id && message.result) {
+      this.log(`DevTools command response: ${JSON.stringify(message)}`, 'info', 'browser-debug');
     }
   }
 

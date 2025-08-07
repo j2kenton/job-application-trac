@@ -13,5 +13,5 @@ echo chrome.exe --remote-debugging-port=9222
 echo.
 echo Press Ctrl+C to stop monitoring
 echo.
-node scripts/browser-error-monitor.js
+node scripts/browser-error-monitor.cjs
 pause
