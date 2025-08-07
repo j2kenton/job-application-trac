@@ -1,119 +1,5 @@
 [
   {
-    "timestamp": "2025-08-07T11:03:54.084Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Enabling runtime events for console monitoring..."
-  },
-  {
-    "timestamp": "2025-08-07T11:03:54.088Z",
-    "level": "success",
-    "source": "browser",
-    "message": "Runtime events enabled - now monitoring for console errors"
-  },
-  {
-    "timestamp": "2025-08-07T11:03:54.100Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools command response: {\"id\":1,\"result\":{}}"
-  },
-  {
-    "timestamp": "2025-08-07T11:03:54.103Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools command response: {\"id\":2,\"result\":{}}"
-  },
-  {
-    "timestamp": "2025-08-07T11:03:54.108Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools command response: {\"id\":3,\"result\":{}}"
-  },
-  {
-    "timestamp": "2025-08-07T11:03:54.115Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools command response: {\"id\":4,\"result\":{}}"
-  },
-  {
-    "timestamp": "2025-08-07T11:03:54.117Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools command response: {\"id\":5,\"result\":{}}"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:38.737Z",
-    "level": "info",
-    "source": "monitor",
-    "message": "Enhanced browser error monitoring system started"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:38.745Z",
-    "level": "info",
-    "source": "build",
-    "message": "Starting build process monitoring..."
-  },
-  {
-    "timestamp": "2025-08-07T11:08:38.750Z",
-    "level": "info",
-    "source": "monitor",
-    "message": "Monitoring both build errors and browser console errors"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:38.753Z",
-    "level": "info",
-    "source": "monitor",
-    "message": "To enable browser monitoring, start Chrome with: chrome --remote-debugging-port=9222"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:38.758Z",
-    "level": "error",
-    "source": "build",
-    "message": "Build process error: spawn npm ENOENT"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.752Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Attempting to connect to Chrome DevTools..."
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.875Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Connecting to browser page: DevTools - localhost:5173/"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.887Z",
-    "level": "success",
-    "source": "browser",
-    "message": "Connected to Chrome DevTools Protocol"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.889Z",
-    "level": "info",
-    "source": "browser",
-    "message": "Enabling runtime events for console monitoring..."
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.894Z",
-    "level": "success",
-    "source": "browser",
-    "message": "Runtime events enabled - now monitoring for console errors"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.906Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.executionContextCreated"
-  },
-  {
-    "timestamp": "2025-08-07T11:08:41.911Z",
-    "level": "info",
-    "source": "browser-debug",
-    "message": "DevTools message received: Runtime.consoleAPICalled"
-  },
-  {
     "timestamp": "2025-08-07T11:08:41.913Z",
     "level": "info",
     "source": "browser",
@@ -1198,5 +1084,120 @@
     "level": "info",
     "source": "browser",
     "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
+  },
+  {
+    "timestamp": "2025-08-07T11:19:01.815Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T11:19:01.819Z",
+    "level": "info",
+    "source": "browser",
+    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
+  },
+  {
+    "timestamp": "2025-08-07T11:19:01.823Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Runtime.consoleAPICalled"
+  },
+  {
+    "timestamp": "2025-08-07T11:19:01.826Z",
+    "level": "info",
+    "source": "browser",
+    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
+  },
+  {
+    "timestamp": "2025-08-07T11:19:05.435Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T11:19:05.438Z",
+    "level": "info",
+    "source": "browser",
+    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
+  },
+  {
+    "timestamp": "2025-08-07T11:19:05.440Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Runtime.consoleAPICalled"
+  },
+  {
+    "timestamp": "2025-08-07T11:19:05.443Z",
+    "level": "info",
+    "source": "browser",
+    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
+  },
+  {
+    "timestamp": "2025-08-07T11:19:58.809Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T11:19:58.814Z",
+    "level": "info",
+    "source": "browser",
+    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
+  },
+  {
+    "timestamp": "2025-08-07T11:19:58.818Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Runtime.consoleAPICalled"
+  },
+  {
+    "timestamp": "2025-08-07T11:19:58.823Z",
+    "level": "info",
+    "source": "browser",
+    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
+  },
+  {
+    "timestamp": "2025-08-07T11:20:10.819Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Console.messageAdded"
+  },
+  {
+    "timestamp": "2025-08-07T11:20:10.822Z",
+    "level": "info",
+    "source": "browser",
+    "message": "Console message: debug - Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
+  },
+  {
+    "timestamp": "2025-08-07T11:20:10.827Z",
+    "level": "info",
+    "source": "browser-debug",
+    "message": "DevTools message received: Runtime.consoleAPICalled"
+  },
+  {
+    "timestamp": "2025-08-07T11:20:10.830Z",
+    "level": "info",
+    "source": "browser",
+    "message": "Console debug: Could not load project settings for http://localhost:5173/: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
+  },
+  {
+    "timestamp": "2025-08-07T11:20:13.969Z",
+    "level": "error",
+    "source": "browser",
+    "message": "Console error: Request Storage.getStorageKeyForFrame failed. {\"code\":-32602,\"message\":\"Frame tree node for given frame not found\"}"
+  },
+  {
+    "timestamp": "2025-08-07T11:20:13.970Z",
+    "level": "error",
+    "source": "browser",
+    "message": "Console message: error - Request Storage.getStorageKeyForFrame failed. {\"code\":-32602,\"message\":\"Frame tree node for given frame not found\"}"
+  },
+  {
+    "timestamp": "2025-08-07T11:20:13.974Z",
+    "level": "info",
+    "source": "autofix",
+    "message": "Attempting auto-fix for BROWSER_RUNTIME_ERROR (attempt 1)"
   }
+]
 ]

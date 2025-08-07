@@ -43,8 +43,22 @@ This file ensures that:
 - Work is never lost when closing/reopening the IDE
 - Each session will continue the commit-after-task pattern
 
+## Enhanced Automation Features
+- **Auto-commit Script**: Use `auto-commit.bat` or `node scripts/auto-commit.js` for intelligent commits
+- **All Systems Startup**: Use `start-all-systems.bat` to launch all development services at once
+- **Error Monitoring**: Enhanced browser console error monitoring with real-time capture
+- **Smart Commit Messages**: Auto-generated commit messages based on file changes
+
 ## Session Startup Checklist
 1. Read this file to understand current project state
-2. Check git status to see recent commits
-3. Review any active development servers (`npm run dev`)
-4. Check for any pending tasks in recent commit messages
+2. Check git status to see recent commits (use `auto-commit.bat status`)
+3. **RECOMMENDED**: Run `start-all-systems.bat` to launch all services automatically
+4. Review any active development servers and monitoring systems
+5. Check `automation.log` for recent automated activities
+6. Check for any pending tasks in recent commit messages
+
+## Quick Start Commands
+- **Start Everything**: `start-all-systems.bat`
+- **Auto Commit**: `auto-commit.bat`
+- **Check Status**: `auto-commit.bat status`
+- **Monitor Errors**: Already running if started with `start-all-systems.bat`
