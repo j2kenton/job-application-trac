@@ -1,5 +1,5 @@
 import { ApplicationList } from './components/ApplicationList';
-import { EmailForwardingSetup } from './components/EmailForwardingSetup';
+import { ThemeToggle } from './components/ThemeToggle';
 import { GmailAuth } from './components/GmailAuth';
 import { GmailSyncStatus } from './components/GmailSyncStatus';
 import { LinkedInAuth } from './components/LinkedInAuth';
@@ -269,12 +269,7 @@ function App() {
                 </p>
               </div>
             </div>
-            <EmailForwardingSetup onApplicationAdd={handleAddApplication}>
-              <Button variant="outline" size="sm" className="gap-2">
-                <Gear size={16} />
-                Email Parser
-              </Button>
-            </EmailForwardingSetup>
+            <ThemeToggle />
           </div>
 
           {applications.length > 0 && (
