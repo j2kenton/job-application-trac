@@ -1,0 +1,29 @@
+# Cline Development Instructions
+
+## Git Workflow
+- **ALWAYS commit after each task completes**
+- Use descriptive commit messages following conventional commit format
+- Example: "feat: implement feature X", "fix: resolve issue Y", "docs: update README"
+
+## Task Completion Protocol
+1. Complete the requested feature/fix
+2. Test functionality if applicable
+3. Stage changes: `git add .`
+4. Commit changes: `git commit -m "descriptive message"`
+5. Use attempt_completion tool to present results
+
+## Development Standards
+- Follow existing code patterns and conventions
+- Maintain TypeScript strict typing
+- Use proper error handling
+- Write clean, readable code
+- Document complex functionality
+
+## Project-Specific Notes
+- This is a Job Application Tracker built with React, TypeScript, and Vite
+- Uses shadcn/ui components and Tailwind CSS for styling
+- Integrates with Gmail API and LinkedIn for data synchronization
+- Features AI-powered email parsing and status detection
+
+## Persistence
+This file should be read at the start of each session to maintain consistency across IDE sessions.
