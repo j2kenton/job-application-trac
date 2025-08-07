@@ -61,66 +61,7 @@ export function MainApp() {
     performInitialSync();
   }, []);
 
-  // Handle external errors (browser extensions, etc.)
-  useEffect(() => {
-    const handleGlobalError = (event: ErrorEvent) => {
-      // Suppress browser extension errors that don't affect our functionality
-      if (event.message && (
-        event.message.includes('message channel closed') ||
-        event.message.includes('listener indicated an asynchronous response') ||
-        event.message.includes('chrome-extension://') ||
-        event.message.includes('moz-extension://') ||
-        event.message.includes('Google API') ||
-        event.message.includes('GAPI') ||
-        event.message.includes('gapi is not defined') ||
-        event.message.includes('google is not defined') ||
-        event.message.includes('Cross-Origin-Opener-Policy') ||
-        event.message.includes('window.opener call') ||
-        event.message.includes('Cross-Origin-Opener-Policy policy would block the window.opener call') ||
-        event.message.includes('gmail/v1/rest') ||
-        event.message.includes('oauth2/v2/userinfo') ||
-        event.message.includes('discovery/v1/apis/gmail') ||
-        event.message.includes('Discovery.GetDiscoveryRest are blocked') ||
-        event.message.includes('403') ||
-        event.message.includes('401') ||
-        event.message.includes('Forbidden') ||
-        event.message.includes('Unauthorized')
-      )) {
-        event.preventDefault();
-        return false;
-      }
-    };
-
-    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      // Suppress browser extension promise rejections
-      const reason = event.reason;
-      if (reason && (
-        (typeof reason === 'string' && (
-          reason.includes('message channel closed') ||
-          reason.includes('listener indicated an asynchronous response') ||
-          reason.includes('Could not establish connection') ||
-          reason.includes('Receiving end does not exist')
-        )) ||
-        (reason instanceof Error && (
-          reason.message.includes('message channel closed') ||
-          reason.message.includes('listener indicated an asynchronous response') ||
-          reason.message.includes('Could not establish connection') ||
-          reason.message.includes('Receiving end does not exist')
-        ))
-      )) {
-        event.preventDefault();
-        return false;
-      }
-    };
-
-    window.addEventListener('error', handleGlobalError);
-    window.addEventListener('unhandledrejection', handleUnhandledRejection);
-
-    return () => {
-      window.removeEventListener('error', handleGlobalError);
-      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
-    };
-  }, []);
+  // Error handling is now centralized in main.tsx - removed duplicate handlers
 
   // Handle LinkedIn OAuth callback in popup
   useEffect(() => {
