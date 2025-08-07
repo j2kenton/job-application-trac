@@ -1,16 +1,25 @@
 # Cline Development Instructions
 
-## Git Workflow
-- **ALWAYS commit after each task completes**
+## Git Workflow - CRITICAL FOR PERSISTENCE
+- **ALWAYS commit after each task completes** - This ensures work persists across IDE sessions
+- **MANDATORY**: Use `git add .` and `git commit` after completing any task
 - Use descriptive commit messages following conventional commit format
 - Example: "feat: implement feature X", "fix: resolve issue Y", "docs: update README"
+- Check `git status` to verify all changes are committed before using attempt_completion
 
-## Task Completion Protocol
+## Task Completion Protocol (REQUIRED EVERY TASK)
 1. Complete the requested feature/fix
 2. Test functionality if applicable
-3. Stage changes: `git add .`
+3. Stage changes: `git add .` or `git add <specific files>`
 4. Commit changes: `git commit -m "descriptive message"`
-5. Use attempt_completion tool to present results
+5. Verify clean working tree: `git status`
+6. Use attempt_completion tool to present results
+
+## Error Monitoring System
+- Use `start-error-monitor.bat` to run automatic error detection
+- Monitor `error-log.json` for error patterns
+- System automatically attempts fixes for common issues
+- Refer to `ERROR_MONITORING_README.md` for details
 
 ## Development Standards
 - Follow existing code patterns and conventions
@@ -24,6 +33,18 @@
 - Uses shadcn/ui components and Tailwind CSS for styling
 - Integrates with Gmail API and LinkedIn for data synchronization
 - Features AI-powered email parsing and status detection
+- LinkedIn sync status integration is complete and functional
 
-## Persistence
-This file should be read at the start of each session to maintain consistency across IDE sessions.
+## Persistence Guarantee
+This file ensures that:
+- All work is committed to git after each task
+- Instructions persist across IDE sessions
+- Development workflow remains consistent
+- Work is never lost when closing/reopening the IDE
+- Each session will continue the commit-after-task pattern
+
+## Session Startup Checklist
+1. Read this file to understand current project state
+2. Check git status to see recent commits
+3. Review any active development servers (`npm run dev`)
+4. Check for any pending tasks in recent commit messages
