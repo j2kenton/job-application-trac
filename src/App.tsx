@@ -5,7 +5,7 @@ import { GmailSyncStatus } from './components/GmailSyncStatus';
 import { LinkedInAuth } from './components/LinkedInAuth';
 import { LinkedInSyncStatus } from './components/LinkedInSyncStatus';
 import { EmailReviewQueue } from './components/EmailReviewQueue';
-import { JobApplication } from './lib/types';
+import { JobApplication, ApplicationStatus } from './lib/types';
 import { syncScheduler } from './lib/gmail/SyncScheduler';
 import { Briefcase, TrendUp, Gear, Envelope, LinkedinLogo } from '@phosphor-icons/react';
 // Test comment for fixed file monitor
@@ -13,6 +13,7 @@ import { useState, useEffect } from 'react';
 import { Toaster } from '@/components/ui/sonner';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 
 function App() {
@@ -25,9 +26,29 @@ function App() {
     }
   });
 
+  const [reviewQueueCount, setReviewQueueCount] = useState(0);
+  const [activeTab, setActiveTab] = useState('applications');
+  const [statusFilters, setStatusFilters] = useState<ApplicationStatus[]>([]);
+
   useEffect(() => {
     localStorage.setItem('job-applications', JSON.stringify(applications));
   }, [applications]);
+
+  // Update review queue count
+  useEffect(() => {
+    const updateReviewQueueCount = () => {
+      const queue = syncScheduler.getReviewQueue();
+      setReviewQueueCount(queue.length);
+    };
+
+    // Initial count
+    updateReviewQueueCount();
+
+    // Set up interval to check for changes
+    const interval = setInterval(updateReviewQueueCount, 2000); // Check every 2 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Perform initial sync on app start
   useEffect(() => {
@@ -212,6 +233,26 @@ function App() {
   const stats = getStatusCounts();
   const activeApplications = stats.applied + stats.interview;
 
+  // Handle statistics card navigation
+  const handleStatClick = (filterType: 'all' | 'active' | 'interview' | 'offer') => {
+    setActiveTab('applications');
+    
+    switch (filterType) {
+      case 'all':
+        setStatusFilters(['applied', 'interview', 'offer', 'rejected', 'withdrawn']);
+        break;
+      case 'active':
+        setStatusFilters(['applied', 'interview']);
+        break;
+      case 'interview':
+        setStatusFilters(['interview']);
+        break;
+      case 'offer':
+        setStatusFilters(['offer']);
+        break;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -238,7 +279,10 @@ function App() {
 
           {applications.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-card p-4 rounded-lg border">
+              <div 
+                className="bg-card p-4 rounded-lg border cursor-pointer hover:bg-accent/50 transition-colors"
+                onClick={() => handleStatClick('all')}
+              >
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-secondary text-secondary-foreground rounded">
                     <Briefcase size={16} />
@@ -250,7 +294,10 @@ function App() {
                 </div>
               </div>
 
-              <div className="bg-card p-4 rounded-lg border">
+              <div 
+                className="bg-card p-4 rounded-lg border cursor-pointer hover:bg-accent/50 transition-colors"
+                onClick={() => handleStatClick('active')}
+              >
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-primary text-primary-foreground rounded">
                     <TrendUp size={16} />
@@ -262,7 +309,10 @@ function App() {
                 </div>
               </div>
 
-              <div className="bg-card p-4 rounded-lg border">
+              <div 
+                className="bg-card p-4 rounded-lg border cursor-pointer hover:bg-accent/50 transition-colors"
+                onClick={() => handleStatClick('interview')}
+              >
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-accent text-accent-foreground rounded">
                     <span className="text-sm font-bold">📋</span>
@@ -274,7 +324,10 @@ function App() {
                 </div>
               </div>
 
-              <div className="bg-card p-4 rounded-lg border">
+              <div 
+                className="bg-card p-4 rounded-lg border cursor-pointer hover:bg-accent/50 transition-colors"
+                onClick={() => handleStatClick('offer')}
+              >
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-accent text-accent-foreground rounded">
                     <span className="text-sm font-bold">🎉</span>
@@ -290,11 +343,16 @@ function App() {
         </header>
 
         <main>
-          <Tabs defaultValue="applications" className="space-y-4">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
             <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="applications" className="gap-2">
                 <Briefcase size={16} />
                 Applications
+                {applications.length > 0 && (
+                  <Badge variant="secondary" className="ml-1 text-xs">
+                    {applications.length}
+                  </Badge>
+                )}
               </TabsTrigger>
               <TabsTrigger value="gmail-setup" className="gap-2">
                 <Envelope size={16} />
@@ -311,6 +369,11 @@ function App() {
               <TabsTrigger value="review-queue" className="gap-2">
                 <Gear size={16} />
                 Review Queue
+                {reviewQueueCount > 0 && (
+                  <Badge variant="destructive" className="ml-1 text-xs">
+                    {reviewQueueCount}
+                  </Badge>
+                )}
               </TabsTrigger>
             </TabsList>
 
@@ -318,6 +381,8 @@ function App() {
               <ApplicationList 
                 applications={applications} 
                 onApplicationsChange={setApplications}
+                externalStatusFilters={statusFilters}
+                onStatusFiltersChange={setStatusFilters}
               />
             </TabsContent>
 
@@ -353,7 +418,14 @@ function App() {
             </TabsContent>
 
             <TabsContent value="review-queue" className="space-y-4">
-              <EmailReviewQueue onApplicationAdd={handleAddApplication} />
+              <EmailReviewQueue 
+                onApplicationAdd={handleAddApplication}
+                onQueueChange={() => {
+                  // Update review queue count immediately when queue changes
+                  const queue = syncScheduler.getReviewQueue();
+                  setReviewQueueCount(queue.length);
+                }}
+              />
             </TabsContent>
           </Tabs>
         </main>

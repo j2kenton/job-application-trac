@@ -1,4 +1,10 @@
-import { ParsedEmailData } from './types';
+import { ParsedEmailData, ApplicationStatus } from './types';
+import { aiStatusDetector, StatusAnalysis } from './ai-status-detector';
+
+export interface EnhancedParsedEmailData extends ParsedEmailData {
+  detectedStatus?: ApplicationStatus;
+  statusAnalysis?: StatusAnalysis;
+}
 
 export function parseEmailContent(emailContent: string): ParsedEmailData {
   const lowercaseContent = emailContent.toLowerCase();
@@ -99,4 +105,97 @@ export function parseEmailContent(emailContent: string): ParsedEmailData {
     jobUrl,
     rawContent: emailContent
   };
+}
+
+/**
+ * Enhanced email parsing with AI-powered status detection
+ */
+export async function parseEmailWithStatusDetection(
+  emailSubject: string,
+  emailContent: string,
+  senderEmail: string,
+  currentStatus?: ApplicationStatus
+): Promise<EnhancedParsedEmailData> {
+  
+  // First, do the basic parsing
+  const basicParsedData = parseEmailContent(emailContent);
+  
+  try {
+    // Use AI to detect the application status
+    const statusAnalysis = await aiStatusDetector.detectApplicationStatus(
+      emailSubject,
+      emailContent,
+      senderEmail,
+      currentStatus
+    );
+    
+    console.log('AI Status Detection Result:', {
+      subject: emailSubject.substring(0, 50) + '...',
+      detectedStatus: statusAnalysis.detectedStatus,
+      confidence: statusAnalysis.confidence,
+      reasoning: statusAnalysis.reasoning
+    });
+    
+    return {
+      ...basicParsedData,
+      detectedStatus: statusAnalysis.detectedStatus,
+      statusAnalysis
+    };
+    
+  } catch (error) {
+    console.warn('AI status detection failed, using basic parsing:', error);
+    
+    // Fallback to basic parsing without status detection
+    return {
+      ...basicParsedData,
+      detectedStatus: currentStatus || 'applied'
+    };
+  }
+}
+
+/**
+ * Quick status detection for existing applications
+ */
+export async function detectStatusFromEmail(
+  emailSubject: string,
+  emailContent: string,
+  senderEmail: string,
+  currentStatus: ApplicationStatus
+): Promise<{
+  newStatus: ApplicationStatus;
+  confidence: number;
+  reasoning: string;
+  shouldUpdate: boolean;
+}> {
+  
+  try {
+    const statusAnalysis = await aiStatusDetector.detectApplicationStatus(
+      emailSubject,
+      emailContent,
+      senderEmail,
+      currentStatus
+    );
+    
+    // Check if the detected status represents a meaningful change
+    const shouldUpdate = 
+      statusAnalysis.detectedStatus !== currentStatus &&
+      statusAnalysis.confidence > 0.6 &&
+      aiStatusDetector.isValidStatusTransition(currentStatus, statusAnalysis.detectedStatus);
+    
+    return {
+      newStatus: statusAnalysis.detectedStatus,
+      confidence: statusAnalysis.confidence,
+      reasoning: statusAnalysis.reasoning,
+      shouldUpdate
+    };
+    
+  } catch (error) {
+    console.error('Status detection failed:', error);
+    return {
+      newStatus: currentStatus,
+      confidence: 0,
+      reasoning: 'Status detection failed',
+      shouldUpdate: false
+    };
+  }
 }

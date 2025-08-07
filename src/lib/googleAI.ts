@@ -250,6 +250,8 @@ Please analyze this email and respond in the following JSON format:
     "company": "Company name if found",
     "position": "Job position if mentioned", 
     "contactEmail": "Contact email if different from sender",
+    "recruiter": "Recruiter name if identified",
+    "interviewer": "Interviewer name if this is an interview-related email",
     "notes": "Any relevant job-related details"
   }
 }
@@ -281,6 +283,31 @@ Exclude these types of emails:
 - Job board notifications (LinkedIn, Indeed, Glassdoor, etc. unless from specific companies)
 - Career tips/advice emails (unless from a recruiter about a specific opportunity)
 - LinkedIn connection requests or generic LinkedIn messages
+
+IMPORTANT FOR LINKEDIN EMAILS:
+When analyzing emails from LinkedIn (notifications, job alerts, etc.), DO NOT extract "LinkedIn" as the company name. 
+Instead, look for the ACTUAL company mentioned in the email content that is hiring or posting the job.
+For example:
+- If email says "Google is hiring for Software Engineer", extract company: "Google", not "LinkedIn"
+- If email says "New job at Microsoft posted on LinkedIn", extract company: "Microsoft", not "LinkedIn"
+LinkedIn is just the platform/notification service, not the employer.
+
+INTERVIEWER EXTRACTION GUIDELINES:
+For interview-related emails, carefully extract the interviewer's name using these patterns:
+- "Interview with [Name]" or "ראיון עם [שם]"
+- "You will be interviewing with [Name]"
+- "Your interviewer will be [Name]" 
+- "Meeting with [Name]" (if in interview context)
+- Names mentioned in email signatures for interview emails
+- From field sender name (if it's an interview invitation)
+
+Exclude generic terms like "HR Team", "Interview Panel", "Committee", etc.
+Look for actual human names, both in English and Hebrew.
+
+RECRUITER VS INTERVIEWER DISTINCTION:
+- Recruiter: Person who contacted you about the opportunity, handles initial screening
+- Interviewer: Specific person who will conduct the technical/final interview
+- The same person can be both, but prioritize their role based on email context
 
 Respond only with valid JSON, no additional text.`;
 

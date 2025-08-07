@@ -353,6 +353,23 @@ class SyncScheduler {
     console.log('Review queue cleared');
   }
 
+  clearAllSyncData(): void {
+    this.reviewQueue = [];
+    this.lastSyncResult = null;
+    this.syncInProgress = false;
+    this.isScheduled = false;
+    
+    // Clear localStorage
+    try {
+      localStorage.removeItem('gmail_review_queue');
+      localStorage.removeItem('gmail_last_sync');
+    } catch (error) {
+      console.error('Error clearing Gmail sync data from localStorage:', error);
+    }
+    
+    console.log('All Gmail sync data cleared');
+  }
+
   resetSyncState(): void {
     this.syncInProgress = false;
     console.log('Sync state manually reset');

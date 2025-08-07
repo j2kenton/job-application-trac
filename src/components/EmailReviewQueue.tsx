@@ -12,9 +12,10 @@ import { toast } from 'sonner';
 
 interface EmailReviewQueueProps {
   onApplicationAdd?: (application: Omit<JobApplication, 'id'>) => void;
+  onQueueChange?: () => void;
 }
 
-export function EmailReviewQueue({ onApplicationAdd }: EmailReviewQueueProps) {
+export function EmailReviewQueue({ onApplicationAdd, onQueueChange }: EmailReviewQueueProps) {
   const [reviewQueue, setReviewQueue] = useState<ReviewQueueItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<ReviewQueueItem | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +35,7 @@ export function EmailReviewQueue({ onApplicationAdd }: EmailReviewQueueProps) {
       syncScheduler.approveReviewItem(item.id, onApplicationAdd);
       toast.success(`Added application for ${item.suggestedApplication.position} at ${item.suggestedApplication.company}`);
       loadReviewQueue();
+      onQueueChange?.(); // Notify parent of queue change
       if (selectedItem?.id === item.id) {
         setSelectedItem(null);
       }
@@ -48,6 +50,7 @@ export function EmailReviewQueue({ onApplicationAdd }: EmailReviewQueueProps) {
     syncScheduler.rejectReviewItem(item.id);
     toast.info('Email rejected and removed from queue');
     loadReviewQueue();
+    onQueueChange?.(); // Notify parent of queue change
     if (selectedItem?.id === item.id) {
       setSelectedItem(null);
     }
@@ -58,6 +61,7 @@ export function EmailReviewQueue({ onApplicationAdd }: EmailReviewQueueProps) {
       syncScheduler.clearReviewQueue();
       toast.success('Review queue cleared');
       loadReviewQueue();
+      onQueueChange?.(); // Notify parent of queue change
       setSelectedItem(null);
     }
   };

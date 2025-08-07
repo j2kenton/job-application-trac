@@ -28,6 +28,10 @@ declare global {
               get: (params: any) => Promise<any>;
               modify: (params: any) => Promise<any>;
             };
+            threads: {
+              get: (params: any) => Promise<any>;
+              list: (params: any) => Promise<any>;
+            };
             labels: {
               list: (params: any) => Promise<any>;
               create: (params: any) => Promise<any>;

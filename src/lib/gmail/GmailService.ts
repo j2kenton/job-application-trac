@@ -42,6 +42,8 @@ export interface ProcessedEmail {
     salary?: string;
     location?: string;
     notes?: string;
+    recruiter?: string;
+    interviewer?: string;
   };
 }
 
@@ -101,6 +103,95 @@ class GmailService {
     } catch (error) {
       console.error('Error fetching emails:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Fetches all emails in a specific thread
+   */
+  async fetchEmailThread(threadId: string): Promise<GmailMessage[]> {
+    try {
+      const gmail = this.getGmailClient();
+      
+      // Get thread details
+      const threadResponse = await gmail.users.threads.get({
+        userId: 'me',
+        id: threadId,
+        format: 'full'
+      });
+
+      if (!threadResponse.result.messages) {
+        return [];
+      }
+
+      return threadResponse.result.messages as GmailMessage[];
+    } catch (error) {
+      console.error('Error fetching email thread:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches all emails related to a specific application (by company/position matching)
+   */
+  async fetchRelatedApplicationEmails(
+    company: string, 
+    position: string, 
+    maxLookbackDays: number = 90
+  ): Promise<GmailMessage[]> {
+    try {
+      const gmail = this.getGmailClient();
+      
+      // Build search query for related emails
+      const lookbackDate = new Date();
+      lookbackDate.setDate(lookbackDate.getDate() - maxLookbackDays);
+      
+      const searchTerms = [
+        company.toLowerCase(),
+        position.toLowerCase()
+      ].filter(term => term.length > 2); // Only search meaningful terms
+      
+      if (searchTerms.length === 0) {
+        return [];
+      }
+      
+      const query = [
+        `after:${lookbackDate.toISOString().split('T')[0]}`,
+        ...searchTerms.map(term => `"${term}"`)
+      ].join(' ');
+      
+      console.log('Searching for related application emails:', query);
+
+      // Get message list
+      const response = await gmail.users.messages.list({
+        userId: 'me',
+        q: query,
+        maxResults: 20 // Reasonable limit for related emails
+      });
+
+      if (!response.result.messages) {
+        return [];
+      }
+
+      // Fetch full message details
+      const messages = await Promise.all(
+        response.result.messages.map(async (msg: any) => {
+          const messageResponse = await gmail.users.messages.get({
+            userId: 'me',
+            id: msg.id,
+            format: 'full'
+          });
+          
+          return messageResponse.result as GmailMessage;
+        })
+      );
+
+      console.log(`Found ${messages.length} related emails for ${company} - ${position}`);
+      return messages;
+      
+    } catch (error) {
+      console.error('Error fetching related application emails:', error);
+      return [];
     }
   }
 
@@ -168,7 +259,7 @@ class GmailService {
       const emailData = this.extractEmailContent(message);
       
       // Use AI to extract job application data
-      const extractedData = await this.extractJobData(emailData.content, emailData.subject);
+      const extractedData = await this.extractJobData(emailData.content, emailData.subject, emailData.from);
       
       // Calculate confidence score
       let confidence = this.calculateConfidence(extractedData, emailData.content);
@@ -309,13 +400,14 @@ class GmailService {
     return { subject, from, to, content };
   }
 
-  private async extractJobData(content: string, subject: string): Promise<any> {
+  private async extractJobData(content: string, subject: string, from: string): Promise<any> {
     try {
       // Simple pattern matching for job application data
       // In a real implementation, you might want to use a more sophisticated AI service
       const extractedData: any = {};
 
       // Extract company name from email signature or subject
+      // Avoid extracting LinkedIn as the company for LinkedIn notification emails
       const companyPatterns = [
         /from:?\s*(.+?)@(.+?)\./i,
         /company:?\s*(.+?)$/im,
@@ -325,8 +417,44 @@ class GmailService {
       for (const pattern of companyPatterns) {
         const match = content.match(pattern) || subject.match(pattern);
         if (match) {
-          extractedData.company = match[1]?.trim();
-          break;
+          const potentialCompany = match[1]?.trim();
+          // Don't extract LinkedIn as company name for LinkedIn notification emails
+          if (potentialCompany && 
+              !potentialCompany.toLowerCase().includes('linkedin') &&
+              !potentialCompany.toLowerCase().includes('noreply') &&
+              !potentialCompany.toLowerCase().includes('no-reply')) {
+            extractedData.company = potentialCompany;
+            break;
+          }
+        }
+      }
+
+      // For LinkedIn emails, try to extract actual company from content
+      const isLinkedInEmail = content.toLowerCase().includes('linkedin') || 
+                             subject.toLowerCase().includes('linkedin');
+      
+      if (isLinkedInEmail && !extractedData.company) {
+        // Look for company names in LinkedIn notification patterns
+        const linkedInCompanyPatterns = [
+          /at\s+([^,\n]+?)(?:\s+is\s+hiring|\s+posted)/i,
+          /([^,\n]+?)\s+is\s+hiring/i,
+          /position\s+at\s+([^,\n]+)/i,
+          /job\s+at\s+([^,\n]+)/i,
+          /opportunity\s+at\s+([^,\n]+)/i
+        ];
+
+        for (const pattern of linkedInCompanyPatterns) {
+          const match = content.match(pattern);
+          if (match) {
+            const companyName = match[1]?.trim();
+            if (companyName && 
+                !companyName.toLowerCase().includes('linkedin') &&
+                companyName.length > 2 && 
+                companyName.length < 100) {
+              extractedData.company = companyName;
+              break;
+            }
+          }
         }
       }
 
@@ -346,10 +474,123 @@ class GmailService {
         }
       }
 
-      // Extract contact email
-      const emailMatch = content.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
-      if (emailMatch) {
-        extractedData.contactEmail = emailMatch[1];
+      // Extract contact email and recruiter name - handle various formats
+      // First try to extract from "Name <email@domain.com>" format in content
+      const nameEmailMatch = content.match(/([^<>\n]+)\s*<([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})>/);
+      if (nameEmailMatch) {
+        const recruiterName = nameEmailMatch[1].trim();
+        const email = nameEmailMatch[2];
+        
+        // Don't extract LinkedIn as recruiter name
+        if (!recruiterName.toLowerCase().includes('linkedin') &&
+            !recruiterName.toLowerCase().includes('noreply') &&
+            !recruiterName.toLowerCase().includes('no-reply') &&
+            recruiterName.length > 2 && 
+            recruiterName.length < 100) {
+          extractedData.recruiter = recruiterName;
+        }
+        
+        extractedData.contactEmail = email;
+      } else {
+        // Fallback: just extract email without name
+        const emailMatch = content.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
+        if (emailMatch) {
+          extractedData.contactEmail = emailMatch[1];
+        }
+      }
+
+      // Also try to extract recruiter name from the "From" header if not found in content
+      if (!extractedData.recruiter && from) {
+        const nameMatch = from.match(/^([^<]+)</);
+        if (nameMatch) {
+          const recruiterName = nameMatch[1].trim();
+          
+          // Don't extract LinkedIn as recruiter name, or system names
+          if (!recruiterName.toLowerCase().includes('linkedin') &&
+              !recruiterName.toLowerCase().includes('noreply') &&
+              !recruiterName.toLowerCase().includes('no-reply') &&
+              !recruiterName.toLowerCase().includes('donotreply') &&
+              !recruiterName.toLowerCase().includes('support') &&
+              !recruiterName.toLowerCase().includes('team') &&
+              !recruiterName.toLowerCase().includes('notifications') &&
+              recruiterName.length > 2 && 
+              recruiterName.length < 100) {
+            extractedData.recruiter = recruiterName;
+          }
+        }
+      }
+
+      // Extract interviewer information from interview-related emails
+      const isInterviewEmail = subject.toLowerCase().includes('interview') || 
+                              content.toLowerCase().includes('interview') ||
+                              subject.toLowerCase().includes('ראיון') ||
+                              content.toLowerCase().includes('ראיון') ||
+                              content.toLowerCase().includes('הראיון');
+
+      if (isInterviewEmail) {
+        // Try to extract interviewer name from various patterns
+        const interviewerPatterns = [
+          // "Interview with John Smith"
+          /interview\s+with\s+([^,\n]+)/i,
+          // "ראיון עם יוחנן כהן"
+          /ראיון\s+עם\s+([^,\n]+)/i,
+          // "You will be interviewing with Sarah"
+          /interviewing\s+with\s+([^,\n]+)/i,
+          // "Your interviewer will be Mike"
+          /interviewer\s+(?:will\s+be|is)\s+([^,\n]+)/i,
+          // "Meeting with John (Interview)"
+          /meeting\s+with\s+([^,\n(]+)(?:\s*\([^)]*interview[^)]*\))?/i,
+          // "Interview: John Smith"
+          /interview:\s*([^,\n]+)/i,
+          // From signature in interview emails
+          /best\s+regards,?\s*([^,\n]+)/i,
+          /regards,?\s*([^,\n]+)/i,
+          // Hebrew patterns
+          /בברכה,?\s*([^,\n]+)/i,
+          /מאמן\/ת:\s*([^,\n]+)/i
+        ];
+
+        for (const pattern of interviewerPatterns) {
+          const match = content.match(pattern) || subject.match(pattern);
+          if (match) {
+            const interviewerName = match[1].trim();
+            
+            // Filter out generic terms and system names
+            if (!interviewerName.toLowerCase().includes('linkedin') &&
+                !interviewerName.toLowerCase().includes('team') &&
+                !interviewerName.toLowerCase().includes('hr') &&
+                !interviewerName.toLowerCase().includes('department') &&
+                !interviewerName.toLowerCase().includes('committee') &&
+                !interviewerName.toLowerCase().includes('panel') &&
+                !interviewerName.toLowerCase().includes('group') &&
+                interviewerName.length > 2 && 
+                interviewerName.length < 100 &&
+                !/^\d+$/.test(interviewerName) && // Not just numbers
+                !/^[^a-zA-Zא-ת]+$/.test(interviewerName)) { // Contains letters
+              extractedData.interviewer = interviewerName;
+              break;
+            }
+          }
+        }
+
+        // If no interviewer found in content, try extracting from "From" field for interview emails
+        if (!extractedData.interviewer && from) {
+          const nameMatch = from.match(/^([^<]+)</);
+          if (nameMatch) {
+            const interviewerName = nameMatch[1].trim();
+            
+            // For interview emails, be more permissive about extracting from sender
+            if (!interviewerName.toLowerCase().includes('linkedin') &&
+                !interviewerName.toLowerCase().includes('noreply') &&
+                !interviewerName.toLowerCase().includes('no-reply') &&
+                !interviewerName.toLowerCase().includes('donotreply') &&
+                !interviewerName.toLowerCase().includes('notifications') &&
+                interviewerName.length > 2 && 
+                interviewerName.length < 100) {
+              extractedData.interviewer = interviewerName;
+            }
+          }
+        }
       }
 
       // Extract URLs - distinguish between job URLs and meeting URLs
