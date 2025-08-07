@@ -37,8 +37,13 @@ export function ThemeToggle() {
       variant="outline"
       size="sm"
       onClick={toggleTheme}
-      className="gap-2"
+      className="gap-2 border-2"
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      style={{
+        backgroundColor: isDark ? 'var(--background)' : 'var(--foreground)',
+        color: isDark ? 'var(--foreground)' : 'var(--background)',
+        borderColor: isDark ? 'var(--border)' : 'var(--foreground)',
+      }}
     >
       {isDark ? <Sun size={16} /> : <Moon size={16} />}
       {isDark ? 'Light' : 'Dark'}

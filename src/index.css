@@ -47,7 +47,7 @@
   --accent-foreground: oklch(0.1 0.02 240);
   --destructive: oklch(0.65 0.245 27.325);
   --destructive-foreground: oklch(0.9 0.02 240);
-  --border: oklch(0.2 0.02 240);
+  --border: oklch(0.35 0.05 240);
   --input: oklch(0.2 0.02 240);
   --ring: oklch(0.7 0.15 240);
 }
@@ -84,6 +84,42 @@
 @layer base {
   body {
     font-family: 'Inter', sans-serif;
+  }
+
+  /* Enhanced button styles with better borders and hover effects */
+  button,
+  [role="button"] {
+    border-width: 1.5px !important;
+    transition: all 0.2s ease-in-out;
+  }
+
+  /* Better hover effects - no text color inversion, just background/border changes */
+  button:hover:not(:disabled),
+  [role="button"]:hover:not(:disabled) {
+    border-color: var(--primary) !important;
+    background-color: var(--accent) !important;
+    /* Maintain text color contrast */
+    color: var(--accent-foreground) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Outline buttons get special treatment */
+  button[class*="outline"]:hover:not(:disabled) {
+    background-color: var(--muted) !important;
+    color: var(--foreground) !important;
+    border-color: var(--ring) !important;
+  }
+
+  /* Dark mode specific hover adjustments */
+  [data-appearance="dark"] button:hover:not(:disabled),
+  [data-appearance="dark"] [role="button"]:hover:not(:disabled) {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  [data-appearance="dark"] button[class*="outline"]:hover:not(:disabled) {
+    background-color: var(--secondary) !important;
+    color: var(--secondary-foreground) !important;
   }
 
   /* Cursor styles for interactive elements */
