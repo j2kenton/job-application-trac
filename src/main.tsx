@@ -8,31 +8,19 @@ import "./main.css"
 import "./styles/theme.css"
 import "./index.css"
 
-// Global error suppression for Google API and browser extension errors
+// Global error suppression for specific Google API console errors only
 const handleGlobalError = (event: ErrorEvent) => {
-  // Suppress all Google API and browser extension errors that don't affect functionality
+  // Only suppress very specific console error messages that don't affect OAuth functionality
   if (event.message && (
     event.message.includes('message channel closed') ||
     event.message.includes('listener indicated an asynchronous response') ||
     event.message.includes('chrome-extension://') ||
     event.message.includes('moz-extension://') ||
-    event.message.includes('Google API') ||
-    event.message.includes('GAPI') ||
-    event.message.includes('gapi is not defined') ||
-    event.message.includes('google is not defined') ||
-    event.message.includes('Cross-Origin-Opener-Policy') ||
-    event.message.includes('window.opener call') ||
+    // Only suppress specific Cross-Origin-Opener-Policy errors
     event.message.includes('Cross-Origin-Opener-Policy policy would block the window.opener call') ||
-    event.message.includes('gmail/v1/rest') ||
-    event.message.includes('oauth2/v2/userinfo') ||
-    event.message.includes('discovery/v1/apis/gmail') ||
-    event.message.includes('Discovery.GetDiscoveryRest are blocked') ||
-    event.message.includes('403') ||
-    event.message.includes('401') ||
-    event.message.includes('Forbidden') ||
-    event.message.includes('Unauthorized') ||
-    event.message.includes('gapi.loaded_0') ||
-    event.message.includes('cb=gapi.loaded_0')
+    event.message.includes('cb=gapi.loaded_0') ||
+    // Only suppress specific blocked API discovery errors
+    event.message.includes('Discovery.GetDiscoveryRest are blocked')
   )) {
     event.preventDefault();
     event.stopPropagation();
