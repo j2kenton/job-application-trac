@@ -12,10 +12,10 @@ export function ThemeToggle() {
     
     if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
       setIsDark(true);
-      document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-appearance', 'dark');
     } else {
       setIsDark(false);
-      document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-appearance', 'light');
     }
   }, []);
 
@@ -24,10 +24,10 @@ export function ThemeToggle() {
     setIsDark(newIsDark);
     
     if (newIsDark) {
-      document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-appearance', 'dark');
       localStorage.setItem('theme', 'dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-appearance', 'light');
       localStorage.setItem('theme', 'light');
     }
   };
