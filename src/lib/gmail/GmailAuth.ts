@@ -153,7 +153,8 @@ class GmailAuthService {
           client_id: clientId,
           scope: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.labels https://www.googleapis.com/auth/gmail.modify',
           callback: async (response: any) => {
-            if (response.access_token) {
+            // Only proceed if we have a valid access token and no error
+            if (response.access_token && !response.error) {
               try {
                 await this.handleAuthSuccess(response.access_token);
               } catch (authError) {
@@ -176,6 +177,15 @@ class GmailAuthService {
                   this.notifyListeners();
                 }, 500);
               }
+            } else if (response.error) {
+              console.error('OAuth error:', response.error);
+              // Don't set authentication state for errors
+              this.authState = {
+                isAuthenticated: false,
+                user: null,
+                accessToken: null
+              };
+              this.notifyListeners();
             }
           },
         });
@@ -216,7 +226,7 @@ class GmailAuthService {
       return new Promise((resolve, reject) => {
         // Set up callback for this specific authentication attempt
         this.tokenClient.callback = async (response: any) => {
-          if (response.access_token) {
+          if (response.access_token && !response.error) {
             try {
               await this.handleAuthSuccess(response.access_token);
               resolve(true);
@@ -242,8 +252,12 @@ class GmailAuthService {
                 resolve(true);
               }, 500);
             }
+          } else if (response.error) {
+            console.error('OAuth authentication failed:', response.error);
+            reject(new Error(`OAuth authentication failed: ${response.error}`));
           } else {
-            reject(new Error('Failed to get access token'));
+            console.error('No access token received from OAuth');
+            reject(new Error('Failed to get access token from OAuth'));
           }
         };
 
