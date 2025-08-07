@@ -104,6 +104,10 @@ class SyncScheduler {
     try {
       await this.performSync(onApplicationAdd);
     } catch (error) {
+      if (error instanceof Error && error.message.includes('Gmail API not fully initialized')) {
+        console.log('Gmail API not available - skipping initial sync');
+        return;
+      }
       console.error('Initial sync failed:', error);
     }
   }

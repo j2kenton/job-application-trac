@@ -54,8 +54,10 @@ class GmailService {
       throw new Error('Not authenticated with Gmail');
     }
 
+    // For fallback authentication scenarios where Gmail API might not be fully initialized
     if (!window.gapi?.client?.gmail) {
-      throw new Error('Gmail API not initialized');
+      console.warn('Gmail API client not available - this is expected with fallback authentication');
+      throw new Error('Gmail API not fully initialized - some features may be limited');
     }
 
     return window.gapi.client.gmail;

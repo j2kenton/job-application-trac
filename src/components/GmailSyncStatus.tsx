@@ -79,7 +79,11 @@ export function GmailSyncStatus({ onApplicationAdd }: GmailSyncStatusProps) {
         toast.warning(`Sync completed with ${result.errors.length} errors`);
       }
     } catch (error: any) {
-      toast.error(`Sync failed: ${error.message}`);
+      if (error.message.includes('Gmail API not fully initialized')) {
+        toast.info('Gmail API is currently unavailable. Email sync features are limited in OAuth-only mode.');
+      } else {
+        toast.error(`Sync failed: ${error.message}`);
+      }
     } finally {
       setIsSyncing(false);
     }

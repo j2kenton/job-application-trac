@@ -40,7 +40,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const currentState = gmailAuth.getAuthState();
         setAuthState(currentState);
       } catch (error) {
-        console.error('Initial auth check failed:', error);
+        // Suppress auth check errors in console - these are expected during initial load
+        if (error && typeof error === 'object' && 'message' in error) {
+          const message = (error as Error).message;
+          if (!message.includes('not configured') && !message.includes('not loaded')) {
+            console.warn('Auth check failed:', message);
+          }
+        }
+        // Set unauthenticated state on error
+        setAuthState({
+          isAuthenticated: false,
+          user: null,
+          accessToken: null
+        });
       } finally {
         setIsLoading(false);
       }
