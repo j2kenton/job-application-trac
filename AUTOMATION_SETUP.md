@@ -21,8 +21,8 @@ auto-commit.bat
 auto-commit.bat status
 
 # Direct Node.js usage
-node scripts/auto-commit.js
-node scripts/auto-commit.js status
+node scripts/auto-commit.cjs
+node scripts/auto-commit.cjs status
 ```
 
 ### Commit Message Examples
