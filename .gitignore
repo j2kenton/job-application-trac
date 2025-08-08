@@ -7,6 +7,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Error monitoring logs
+browser-error-log.json
+error-log.json
+
 node_modules
 dist
 dist-ssr
