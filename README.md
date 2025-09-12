@@ -1,6 +1,6 @@
 # Job Application Tracker
 
-🚀 **Smart Job Search Management** - Automatically parse job application emails, track statuses, and manage your career opportunities with AI-powered insights and duplicate prevention.
+🚀 **AI-Powered Job Search Management** - Automatically parse job application emails, track statuses, and manage your career opportunities with AI-powered insights and duplicate prevention.
 
 **Key Features:**
 - 📧 **Automated Email Parsing** - Forward job emails to auto-extract company, position & details
@@ -14,7 +14,7 @@
 
 ✨ **Automated Email Parsing** - Forward job application emails to automatically extract company, position, and details
 📊 **Status Tracking** - Track applications from applied to offer/rejection
-🔍 **Smart Filtering** - Filter applications by status with real-time counts
+🔍 **Advanced Filtering** - Filter applications by status with real-time counts
 🚫 **Duplicate Prevention** - Automatic detection of duplicate applications
 📱 **Responsive Design** - Works perfectly on desktop and mobile
 
