@@ -35,3 +35,8 @@ packages
 .devcontainer/
 
 .spark-workbench-id
+
+# Backup files containing sensitive data
+backup-*.zip
+repo-backup*.zip
+temp_backup_check/
