@@ -1,14 +1,22 @@
 # Job Application Tracker
 
-A smart job application tracking system that automatically parses emails and helps you manage your job search.
+🚀 **Smart Job Search Management** - Automatically parse job application emails, track statuses, and manage your career opportunities with AI-powered insights and duplicate prevention.
+
+**Key Features:**
+- 📧 **Automated Email Parsing** - Forward job emails to auto-extract company, position & details
+- 🤖 **AI-Powered Analysis** - Gemini AI integration for intelligent status detection
+- 📊 **Advanced Tracking** - From application to offer with real-time statistics
+- 🔄 **LinkedIn Integration** - Sync with LinkedIn for comprehensive job search management
+- 📱 **Responsive Design** - Perfect on desktop, tablet, and mobile devices
+- 🔒 **Privacy-First** - All data stored locally, no external servers
 
 ## Features
 
-✨ **Automated Email Parsing** - Forward job application emails to automatically extract company, position, and details  
-📊 **Status Tracking** - Track applications from applied to offer/rejection  
-🔍 **Smart Filtering** - Filter applications by status with real-time counts  
-🚫 **Duplicate Prevention** - Automatic detection of duplicate applications  
-📱 **Responsive Design** - Works perfectly on desktop and mobile  
+✨ **Automated Email Parsing** - Forward job application emails to automatically extract company, position, and details
+📊 **Status Tracking** - Track applications from applied to offer/rejection
+🔍 **Smart Filtering** - Filter applications by status with real-time counts
+🚫 **Duplicate Prevention** - Automatic detection of duplicate applications
+📱 **Responsive Design** - Works perfectly on desktop and mobile
 
 ## Quick Start
 
@@ -42,7 +50,7 @@ Once configured, the system will automatically:
 ## Status Types
 
 - **Applied**: Recently submitted applications
-- **Interview**: Applications with scheduled or completed interviews  
+- **Interview**: Applications with scheduled or completed interviews
 - **Offer**: Applications that resulted in job offers
 - **Rejected**: Applications that were declined
 - **Withdrawn**: Applications you chose to withdraw
